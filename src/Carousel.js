@@ -44,7 +44,7 @@ module.exports = function(carouselOptions) {
         carousel.root.removeChild(carousel.pager.node);
         carousel.pager.node = null;
 
-        for(var arrow in carousel.arrows) {
+        for (var arrow in carousel.arrows) {
             carousel.arrows[arrow].remove();
             delete carousel.arrows[arrow];
             carousel.arrows[arrow] = null;
@@ -113,7 +113,6 @@ module.exports = function(carouselOptions) {
 
     var currentIndex = carousel.initialIndex;
     _bindEvents();
-
 
     // Helper methods
     // ------------------------------------------------------------------------
@@ -197,7 +196,7 @@ module.exports = function(carouselOptions) {
 
     function _keyHandler(e) {
         var direction;
-        switch(e.keyCode) {
+        switch (e.keyCode) {
             case 39:
                 direction = 1;
                 break;

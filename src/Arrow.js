@@ -20,7 +20,7 @@ function Arrow(options) {
     this.el.setProperty("cursor", "pointer");
     this.el.setProperty("textHighlight", "none");
     this.el.setProperty("zIndex", "2");
-    if(options.cssClass && typeof options.cssClass === 'string') {
+    if (options.cssClass && typeof options.cssClass === "string") {
         this.el.addClass(options.cssClass);
     } else {
         this.el.setProperty("color", this.fillColor);
@@ -35,19 +35,19 @@ function Arrow(options) {
     this.gestures.on("tap", this.emitPageChange.bind(this));
 
     //GestureHandler doesn't work for IE<11. Add a handler for it. Yuk!
-    if (navigator.userAgent.indexOf("MSIE") != -1) {
+    if (navigator.userAgent.indexOf("MSIE") !== -1) {
         FamousEngine.requestUpdate(this);
     }
 }
 
-Arrow.prototype.onUpdate = function(time) {
+Arrow.prototype.onUpdate = function() { //unused param: time
     //Look for element after it's rendered.
-    this.arrowEl = document.querySelector("[data-fa-path='" + this.el._attributes["data-fa-path"] + "']");
-    if(!this.arrowEl) {
+    this.arrowEl = document.querySelector(
+        "[data-fa-path='" + this.el._attributes["data-fa-path"] + "']");
+    if (!this.arrowEl) {
         FamousEngine.requestUpdate(this);
-    }
-    else {
-        this.arrowEl.attachEvent('onclick', this.emitPageChange.bind(this));
+    } else {
+        this.arrowEl.attachEvent("onclick", this.emitPageChange.bind(this));
     }
 };
 
@@ -68,8 +68,8 @@ Arrow.prototype.setEnableState = function(enable) {
 };
 
 Arrow.prototype.remove = function() {
-    if(this.arrowEl) {
-        this.arrowEl.detachEvent('onclick', this.emitPageChange); //For IE<11
+    if (this.arrowEl) {
+        this.arrowEl.detachEvent("onclick", this.emitPageChange); //For IE<11
     }
 
     //DOMElement bug https://github.com/Famous/engine/issues/245

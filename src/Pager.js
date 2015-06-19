@@ -45,7 +45,7 @@ Pager.prototype.defineWidth = function(size) {
 };
 
 Pager.prototype.onUpdate = function(time) {
-    if(!this.node) {
+    if (!this.node) {
         return;
     }
 

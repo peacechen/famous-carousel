@@ -83,7 +83,7 @@ function Dot(node, options) {
     this.el = new DOMElement(node);
     this.el.setProperty("borderRadius", "5px");
     this.el.setProperty("boxSizing", "border-box");
-    if(options.cssUnselectedClass && typeof options.cssUnselectedClass === 'string') {
+    if (options.cssUnselectedClass && typeof options.cssUnselectedClass === "string") {
         this.el.addClass(options.cssUnselectedClass);
     } else {
         this.el.setProperty("border", "2px solid " + options.foregroundColor);
@@ -94,7 +94,7 @@ function Dot(node, options) {
 }
 
 Dot.prototype.select = function(options) {
-    if(options.cssSelectedClass && typeof options.cssSelectedClass === 'string') {
+    if (options.cssSelectedClass && typeof options.cssSelectedClass === "string") {
         this.el.addClass(options.cssSelectedClass);
         this.el.removeClass(options.cssUnselectedClass);
     } else {
@@ -103,7 +103,7 @@ Dot.prototype.select = function(options) {
 };
 
 Dot.prototype.deselect = function(options) {
-    if(options.cssUnselectedClass && typeof options.cssUnselectedClass === 'string') {
+    if (options.cssUnselectedClass && typeof options.cssUnselectedClass === "string") {
         this.el.addClass(options.cssUnselectedClass);
         this.el.removeClass(options.cssSelectedClass);
     } else {
