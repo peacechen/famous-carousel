@@ -4,3 +4,4 @@ npm-debug.log
 .DS_Store
 example/example.js
 example/famous-carousel.*
+.tags

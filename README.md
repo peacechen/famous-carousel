@@ -27,9 +27,10 @@ famous-carousel uses Browserify require. Refer to the _example_ folder for boile
 The following keys are supported in the options object. Only _carouselData_ is required, all others are optional.
 
 * #### _selector_
-Type: `String`
+Type: `String` or `Object`<BR>
 Default: `body`<BR>
-The CSS selector of the element to render into.
+As a string, _selector_ is a CSS selector of the element to render into.<BR>
+As an object, _selector_ is assumed to be a Famous node.
 
 * #### carouselData (required)
 Type: `Object`<BR>
@@ -38,75 +39,75 @@ _type_ may be 'image' or 'markup'.<BR>
 _data_ must be a url for image, or any valid html for markup.
 
 * #### initialIndex
-Type: `Integer`
-Default: 0<BR>
+Type: `Integer`<BR>
+Default: `0`<BR>
 Initial slide number to show (zero-based). If larger than the number of slides, it will cap to the final slide.
 
 * #### wrapAround
-Type: `Boolean`
+Type: `Boolean`<BR>
 Default: `false`<BR>
 By default, navigation stops at the ends of the slide set. Setting wrapAround to true allows navigation to wrap from one end to the other.
 
 * #### autoPlay
-Type: `Integer`
-Default: 0<BR>
+Type: `Integer`<BR>
+Default: `0`<BR>
 Automatically transition slides, pausing on each slide for the number of milliseconds specified. When the user navigates manually, automatic playback stops.
 
 * #### autoSlidesToAdvance
-Type: `Integer`
-Default: 1<BR>
+Type: `Integer`<BR>
+Default: `1`<BR>
 Number of slides to advance during automatic playback.
 
 * #### manualSlidesToAdvance
-Type: `Integer`
-Default: 1<BR>
+Type: `Integer`<BR>
+Default: `1`<BR>
 Number of slides to advance when user navigates.
 
 * #### dotWidth
-Type: `Integer`
-Default: 10<BR>
+Type: `Integer`<BR>
+Default: `10`<BR>
 Width of dots along bottom.
 
 * #### dotSpacing
-Type: `Integer`
-Default: 5<BR>
+Type: `Integer`<BR>
+Default: `5`<BR>
 Spacing of dots along bottom.
 
 * #### dotForeColor
-Type: `String`
-Default: 'white'<BR>
+Type: `String`<BR>
+Default: `'white'`<BR>
 Navigation dot foreground color (CSS style).
 
 * #### dotBackColor
-Type: `String`
-Default: 'transparent'<BR>
+Type: `String`<BR>
+Default: `'transparent'`<BR>
 Navigation dot background color (CSS style).
 
 * #### dotOpacity
-Type: `Float`
-Default: 1.0<BR>
+Type: `Float`<BR>
+Default: `1.0`<BR>
 Navigation dot opacity (CSS style).
 
 * #### dotSelectedClass
-Type: `String`
+Type: `String`<BR>
 CSS class to style the selected dot. This overrides the other dot* CSS options (dotWidth & dotSpacing continue to be honored).
 
 * #### dotUnselectedClass
-Type: `String`
+Type: `String`<BR>
 CSS class to style unselected dots. This overrides the other dot* CSS options (dotWidth & dotSpacing continue to be honored).
 
 * #### arrowFillColor
-Type: `String`
-Default: 'white'<BR>
+Type: `String`<BR>
+Default: `'white'`<BR>
 Navigation arrow fill color (CSS style).
 
 * #### arrowOutlineColor
-Type: `String`
-Default: 'transparent'<BR>
+Type: `String`<BR>
+Default: `'transparent'`<BR>
 Navigation arrow outline color (CSS style).
 
 * #### arrowClass
-Type: `String`
+Type: `String`<BR>
 CSS class to style dots. This overrides the other arrow* CSS options.
 
 

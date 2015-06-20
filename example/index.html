@@ -18,7 +18,8 @@
         }
         body {
             background: white;
-            position: absolute;
+            /* IE needs container's parent set to relative for overflow:hidden to work */
+            position: relative;
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
             -webkit-font-smoothing: antialiased;

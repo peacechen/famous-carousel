@@ -7,13 +7,26 @@ module.exports = function(carouselOptions) {
     var Pager = require("./Pager.js");
     var Dots = require("./Dots.js");
     var FamousEngine = require("famous/core/FamousEngine");
-    FamousEngine.init();
+
+    var context;
+    switch (typeof carouselOptions.selector) {
+        case "object":
+            context = carouselOptions.selector; //famous node
+            break;
+        case "undefined":
+        case "string":
+            FamousEngine.init();
+            context = FamousEngine.createScene(carouselOptions.selector);
+            break;
+        default:
+            throw ("famous-carousel: unsupported selector type");
+    }
 
     // Public
     // ------------------------------------------------------------------------
     var carousel = {
         options: carouselOptions,
-        context: FamousEngine.createScene(carouselOptions.selector),
+        context: context,
         autoPlay: carouselOptions.autoPlay || 0,
         initialIndex: carouselOptions.initialIndex || 0
     };
