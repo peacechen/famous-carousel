@@ -2,6 +2,8 @@
 
 A responsive carousel / slideshow / slider powered by Famo.us.  Supports mouse, touch/swipe and keyboard navigation.
 
+![famous-carousel preview](https://cloud.githubusercontent.com/assets/6295083/8266024/78a6db1c-16dc-11e5-9c18-93a25824a72c.gif)
+
 After cloning the repo:
 
     npm install
