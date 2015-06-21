@@ -108,7 +108,9 @@ Pager.prototype.pageChange = function(oldIndex, newIndex) {
 Pager.prototype.removePages = function() {
     for (var i = 0; i < this.pages.length; i++) {
         //DOMElement bug https://github.com/Famous/engine/issues/245
-        this.pages[i].el.setProperty("display", "none");
+        if (this.pages[i].el) {
+            this.pages[i].el.setProperty("display", "none");
+        }
         this.options.parent.removeChild(this.pages[i].node);
     }
     this.pages = [];
@@ -116,10 +118,27 @@ Pager.prototype.removePages = function() {
 
 Pager.prototype.createPages = function(options) {
     var pages = [];
-    var root = this.node;
 
     for (var i = 0; i < options.carouselData.length; i++) {
-        var slide = root.addChild();
+        var slide, el;
+
+        if (options.carouselData[i].type === "node") {
+            slide = options.carouselData[i].data;
+        } else {
+            slide = this.node.addChild();
+            el = new DOMElement(slide);
+            switch (options.carouselData[i].type) {
+                case "image":
+                    el.setProperty("backgroundImage", "url(" + options.carouselData[i].data + ")");
+                    el.setProperty("background-repeat", "no-repeat");
+                    el.setProperty("background-size", "contain");
+                    el.setProperty("background-position", "center");
+                    break;
+                case "markup":
+                    el.setContent(options.carouselData[i].data);
+                    break;
+            }
+        }
 
         // slide.setProportionalSize(1, 1);
         slide.setAlign(0.5, 0.5);
@@ -156,19 +175,6 @@ Pager.prototype.createPages = function(options) {
             }
         }.bind(this, i));
         /*eslint-enable */
-
-        var el = new DOMElement(slide);
-        switch (options.carouselData[i].type) {
-            case "image":
-                el.setProperty("backgroundImage", "url(" + options.carouselData[i].data + ")");
-                el.setProperty("background-repeat", "no-repeat");
-                el.setProperty("background-size", "contain");
-                el.setProperty("background-position", "center");
-                break;
-            case "markup":
-                el.setContent(options.carouselData[i].data);
-                break;
-        }
 
         // A `Box` body to relay simulation data back to the visual element
         var box = new Box({

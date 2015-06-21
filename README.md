@@ -33,10 +33,22 @@ As a string, _selector_ is a CSS selector of the element to render into.<BR>
 As an object, _selector_ is assumed to be a Famous node.
 
 * #### carouselData (required)
-Type: `Object`<BR>
+Type: `Array`<BR>
 This specifies the content of the slides. It is an array of objects, each containing _type_ and _data_ keys.<BR>
-_type_ may be 'image' or 'markup'.<BR>
-_data_ must be a url for image, or any valid html for markup.
+_type_ may be 'image', 'markup', or 'node'.<BR>
+_data_ must be a url for image, any valid html for markup, or a Famo.us node object.<BR>
+Example data:<BR>
+        [
+            {   "type": "image",
+                "data": "http://myDomain/myPicture.jpg"
+            },
+            {   "type": "markup",
+                "data": "<div style='color:blue'>Hello World<BR><BR>It's me!</div>"
+            },
+            {   "type": "node",
+                "data": myFamousNode
+            }
+        ]
 
 * #### initialIndex
 Type: `Integer`<BR>
