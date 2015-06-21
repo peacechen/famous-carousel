@@ -26,8 +26,9 @@
     "lint": "npm run lint-eslint && npm run lint-jscs",
     "lint-jscs": "jscs src/",
     "lint-eslint": "eslint --ignore-path .gitignore src/",
-    "example": "npm run build-example && node node_modules/serve/bin/serve example/ -p 8080",
-    "build-example": "browserify example/index.js -d > example/example.js"
+    "example": "npm run build-example && npm run serve",
+    "build-example": "browserify example/index.js -d > example/example.js",
+    "serve": "node node_modules/serve/bin/serve example/ -p 8080"
   },
   "browserify": {
     "transform": [

@@ -41,7 +41,7 @@ function Arrow(options) {
 }
 
 Arrow.prototype.onUpdate = function() { //unused param: time
-    //Look for element after it's rendered.
+    //IE hack to support clicks. Look for element after it's rendered & attach handler.
     this.arrowEl = document.querySelector(
         "[data-fa-path='" + this.el._attributes["data-fa-path"] + "']");
     if (!this.arrowEl) {
