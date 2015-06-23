@@ -2,12 +2,15 @@
  * Arrow.js
 */
 
-var FamousEngine = require("famous/core/FamousEngine");
-var DOMElement = require("famous/dom-renderables/DOMElement");
-var GestureHandler = require("famous/components/GestureHandler");
+import FamousEngine from 'famous/core/FamousEngine';
+import DOMElement from 'famous/dom-renderables/DOMElement';
+import GestureHandler from 'famous/components/GestureHandler';
 
-function Arrow(options) {
+export class Arrow {
+
+  constructor(options) {
     this.parent = options.parent;
+    console.log(options)
     this.node = this.parent.addChild();
     this.fillColor = options.fillColor || "white";
     this.outlineColor = options.outlineColor || "transparent";
@@ -38,43 +41,43 @@ function Arrow(options) {
     if (navigator.userAgent.indexOf("MSIE") !== -1) {
         FamousEngine.requestUpdate(this);
     }
+
+  }
+
+  onUpdate() { //unused param: time
+      //IE hack to support clicks. Look for element after it's rendered & attach handler.
+      this.arrowEl = document.querySelector(
+          "[data-fa-path='" + this.el._attributes["data-fa-path"] + "']");
+      if (!this.arrowEl) {
+          FamousEngine.requestUpdate(this);
+      } else {
+          this.arrowEl.attachEvent("onclick", this.emitPageChange.bind(this));
+      }
+  }
+
+  emitPageChange() {
+      this.node.emit("pageChange", {
+          direction: this.direction,
+          numSlidesToAdvance: this.manualSlidesToAdvance,
+          stopAutoPlay: true
+      });
+  }
+
+  setEnableState(enable) {
+      if (enable) {
+          this.el.setProperty("display", "block");
+      } else {
+          this.el.setProperty("display", "none");
+      }
+  }
+
+  remove() {
+      if (this.arrowEl) {
+          this.arrowEl.detachEvent("onclick", this.emitPageChange); //For IE<11
+      }
+
+      //DOMElement bug https://github.com/Famous/engine/issues/245
+      this.el.setProperty("display", "none");
+      this.parent.removeChild(this.node);
+  }
 }
-
-Arrow.prototype.onUpdate = function() { //unused param: time
-    //IE hack to support clicks. Look for element after it's rendered & attach handler.
-    this.arrowEl = document.querySelector(
-        "[data-fa-path='" + this.el._attributes["data-fa-path"] + "']");
-    if (!this.arrowEl) {
-        FamousEngine.requestUpdate(this);
-    } else {
-        this.arrowEl.attachEvent("onclick", this.emitPageChange.bind(this));
-    }
-};
-
-Arrow.prototype.emitPageChange = function() {
-    this.node.emit("pageChange", {
-        direction: this.direction,
-        numSlidesToAdvance: this.manualSlidesToAdvance,
-        stopAutoPlay: true
-    });
-};
-
-Arrow.prototype.setEnableState = function(enable) {
-    if (enable) {
-        this.el.setProperty("display", "block");
-    } else {
-        this.el.setProperty("display", "none");
-    }
-};
-
-Arrow.prototype.remove = function() {
-    if (this.arrowEl) {
-        this.arrowEl.detachEvent("onclick", this.emitPageChange); //For IE<11
-    }
-
-    //DOMElement bug https://github.com/Famous/engine/issues/245
-    this.el.setProperty("display", "none");
-    this.parent.removeChild(this.node);
-};
-
-module.exports = Arrow;
