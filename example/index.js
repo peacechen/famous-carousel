@@ -4,7 +4,7 @@
 
 // App Code
 //when using this as a node_module, use require('famous-carousel')
-var famousCarousel = require('../');
+var famousCarousel = require('../src');
 console.log(famousCarousel);
 var imageData = require('./data/data');
 // Both of the following work from the require above
