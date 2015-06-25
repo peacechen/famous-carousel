@@ -2,12 +2,14 @@
  * Carousel.js
 */
 
-module.exports = function(carouselOptions) {
-    var Arrow = require("./Arrow.js");
-    var Pager = require("./Pager.js");
-    var Dots = require("./Dots.js");
-    var FamousEngine = require("famous/core/FamousEngine");
+import {Arrow} from './Arrow';
+import {Pager} from './Pager';
+import {Dots} from './Dots';
+import FamousEngine from 'famous/core/FamousEngine';
 
+export class Carousel {
+
+  constructor(carouselOptions) {
     var context;
     switch (typeof carouselOptions.selector) {
         case "object":
@@ -103,15 +105,16 @@ module.exports = function(carouselOptions) {
         opacity: carousel.options.dotOpacity
     });
 
+    var backArrow = new Arrow({
+            parent: carousel.root,
+            direction: -1,
+            cssClass: carousel.options.arrowClass,
+            fillColor: carousel.options.arrowFillColor,
+            outlineColor: carousel.options.arrowOutlineColor,
+            manualSlidesToAdvance: carousel.options.manualSlidesToAdvance
+        });
     carousel.arrows = {
-        back: new Arrow({
-                parent: carousel.root,
-                direction: -1,
-                cssClass: carousel.options.arrowClass,
-                fillColor: carousel.options.arrowFillColor,
-                outlineColor: carousel.options.arrowOutlineColor,
-                manualSlidesToAdvance: carousel.options.manualSlidesToAdvance
-            }),
+        back: backArrow,
         next: new Arrow({
                 parent: carousel.root,
                 direction: 1,
@@ -238,4 +241,5 @@ module.exports = function(carouselOptions) {
     // ------------------------------------------------------------------------
 
     return carousel;
-};
+  }
+}

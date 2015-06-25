@@ -16,12 +16,15 @@ Start the example project at port 8080:
 
 famous-carousel uses Browserify require. Refer to the _example_ folder for boilerplate setup. When using this as an npm module, reference it as such:
 
-    var Carousel = require('famous-carousel');
+    var Carousel = require('famous-carousel').Carousel;
     var myCarousel = new Carousel('myDivSelector', {
                             // add options here
                             // ...
                         }
                     );
+
+  ####ES6
+    import { Carousel } from 'famous-carousel';
 
 ### Carousel Options
 The following keys are supported in the options object. Only _carouselData_ is required, all others are optional.
@@ -134,11 +137,22 @@ Removes the slides.
 Removes the carousel instance entirely. NOTE: Famo.us 0.5.2 has [a bug causing it not to remove the DOMElement](https://github.com/Famous/engine/issues/245). famous-carousel removes the div.famous-dom-renderer element for now.<BR>
 
 ### Building
-To build a self-contained bundle:
+To build a self-contained bundles:
 
-    npm run build
+    $ npm run build
 
-That builds the CommonJS version (famous-carousel.js), global version (famous-carousel.global.js), and global debug versions (famous-carousel.global.debug.js). The global build uses the variable name _famousCarousel_.  To see the global version in action, copy _dist/famous-carousel.global.js_ to _example/_, start a server in example and open _global.html_ .
+Builds
+ - CommonJS version (dist/famous-carousel.min.js)
+ - global version (dist/global/famous-carousel.min.js), and global debug version (dist/global/famous-carousel.debug.js).  
+ The global build uses the variable name _famousCarousel_.  
+ To see the global version in action open browser to local port 8080/_global.html_ after:  
+
+      $ npm run example
+
+To build optional es5 code:
+
+     $ npm install -g babel
+     $ npm run build-es5
 
 Run tests (linter & style checks for now):
 

@@ -4,9 +4,12 @@
 
 // App Code
 //when using this as a node_module, use require('famous-carousel')
-var Carousel = require('../src/Carousel');
+var famousCarousel = require('../src');
+console.log(famousCarousel);
 var imageData = require('./data/data');
-var carousel = new Carousel({
+// Both of the following work from the require above
+//var carousel = new famousCarousel.Carousel({
+var carousel = famousCarousel.default({
         selector: '.slideshow',
         carouselData: imageData,
         wrapAround: true,
