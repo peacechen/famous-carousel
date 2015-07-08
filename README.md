@@ -1,6 +1,22 @@
 ##Famo.us Carousel
 
-A responsive carousel / slideshow / slider powered by Famo.us.  Supports mouse, touch/swipe and keyboard navigation.
+A responsive carousel / slideshow / slider powered by Famo.us.  Supports mouse, touch/swipe and keyboard navigation.<BR>
+
+***
+__UPDATE: 0.9.x introduces ES6 and a new require() path:__
+
+CommonJS:
+
+        var famousCarousel = require("famous-carousel/src/Carousel");
+        var carousel = new famousCarousel.Carousel( {...} );
+
+Global:
+
+        var carousel = famousCarousel.default({
+
+__If you see any unusual behavior after upgrading, delete node\_modules and run _npm install_ again__
+<BR>
+***
 
 ![famous-carousel preview](https://cloud.githubusercontent.com/assets/6295083/8266024/78a6db1c-16dc-11e5-9c18-93a25824a72c.gif)
 
@@ -16,12 +32,15 @@ Start the example project at port 8080:
 
 famous-carousel uses Browserify require. Refer to the _example_ folder for boilerplate setup. When using this as an npm module, reference it as such:
 
-    var Carousel = require('famous-carousel');
-    var myCarousel = new Carousel('myDivSelector', {
+    var Carousel = require("famous-carousel").Carousel;
+    var myCarousel = new Carousel("myDivSelector", {
                             // add options here
                             // ...
                         }
                     );
+
+  ####ES6 is now supported
+    import { Carousel } from "famous-carousel";
 
 ### Carousel Options
 The following keys are supported in the options object. Only _carouselData_ is required, all others are optional.
@@ -35,7 +54,7 @@ As an object, _selector_ is assumed to be a Famous node.
 * #### carouselData (required)
 Type: `Array`<BR>
 This specifies the content of the slides. It is an array of objects, each containing _type_ and _data_ keys.<BR>
-_type_ may be 'image', 'markup', or 'node'.<BR>
+_type_ may be `image`, `markup`, or `node`.<BR>
 _data_ must be a url for image, any valid html for markup, or a Famo.us node object.<BR>
 Example data:<BR>
         [
@@ -87,12 +106,12 @@ Spacing of dots along bottom.
 
 * #### dotForeColor
 Type: `String`<BR>
-Default: `'white'`<BR>
+Default: `"white"`<BR>
 Navigation dot foreground color (CSS style).
 
 * #### dotBackColor
 Type: `String`<BR>
-Default: `'transparent'`<BR>
+Default: `"transparent"`<BR>
 Navigation dot background color (CSS style).
 
 * #### dotOpacity
@@ -110,12 +129,12 @@ CSS class to style unselected dots. This overrides the other dot* CSS options (d
 
 * #### arrowFillColor
 Type: `String`<BR>
-Default: `'white'`<BR>
+Default: `"white"`<BR>
 Navigation arrow fill color (CSS style).
 
 * #### arrowOutlineColor
 Type: `String`<BR>
-Default: `'transparent'`<BR>
+Default: `"transparent"`<BR>
 Navigation arrow outline color (CSS style).
 
 * #### arrowClass
@@ -134,11 +153,22 @@ Removes the slides.
 Removes the carousel instance entirely. NOTE: Famo.us 0.5.2 has [a bug causing it not to remove the DOMElement](https://github.com/Famous/engine/issues/245). famous-carousel removes the div.famous-dom-renderer element for now.<BR>
 
 ### Building
-To build a self-contained bundle:
+To build a self-contained bundles:
 
-    npm run build
+    $ npm run build
 
-That builds the CommonJS version (famous-carousel.js), global version (famous-carousel.global.js), and global debug versions (famous-carousel.global.debug.js). The global build uses the variable name _famousCarousel_.  To see the global version in action, copy _dist/famous-carousel.global.js_ to _example/_, start a server in example and open _global.html_ .
+Builds
+ - CommonJS version (dist/famous-carousel.min.js)
+ - global version (dist/global/famous-carousel.min.js), and global debug version (dist/global/famous-carousel.debug.js).  
+ The global build uses the variable name _famousCarousel_.  
+ To see the global version in action open browser to local port 8080/_global.html_ after:  
+
+      $ npm run example
+
+To build optional es5 code:
+
+     $ npm install -g babel
+     $ npm run build-es5
 
 Run tests (linter & style checks for now):
 
@@ -171,6 +201,7 @@ Pull requests are welcome. When submitting a PR, please make sure _npm run test_
 * Option to auto-hide navigation arrows & dots.
 * Navigate by clicking on dots.
 * Auto start/stop videos in slides.
+* Option for vertical scrolling.
 * Support CSS class for slides?
 
 ### License

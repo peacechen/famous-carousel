@@ -1,11 +1,12 @@
 {
-    "preset": "google",
-    "maximumLineLength": {
-        "value": 100,
-        "allowRegex": true,
-        "allowComments": true
-    },
-    "disallowMultipleVarDecl": "exceptUndefined",
-    "validateIndentation": 4,
-    "validateQuoteMarks": "\""
+	"preset": "google",
+	"maximumLineLength": {
+		"value": 100,
+		"allowRegex": true,
+		"allowComments": true
+	},
+	"disallowMultipleVarDecl": "exceptUndefined",
+	"validateIndentation": "\t",
+	"validateQuoteMarks": "\"",
+	"esnext": true
 }
