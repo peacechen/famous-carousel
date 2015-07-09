@@ -1,5 +1,8 @@
 node_modules/
 .DS_Store
 *.log
+dist/global/*.js
+dist/commonjs/*.js
 example/example.js
+example/famous-carousel.global.js
 .tags

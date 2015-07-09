@@ -28,7 +28,7 @@
             overflow: hidden;
         }
 
-        .slideshow {
+        .slideshow-container {
             width: 80%;
             height: 80%;
             background: black;
@@ -42,10 +42,16 @@
             margin:auto;
         }
 
+        .slideshow {
+            height: 100%;
+        }
+
         </style>
     </head>
     <body>
-        <div class="slideshow"></div>
+        <div class="slideshow-container">
+            <div class="slideshow"></div>
+        </div>
         <script src="famous-carousel.global.js"></script>
         <script>
             // Instantiation example of famous-carousel using global var

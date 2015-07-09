@@ -1,4 +1,4 @@
-##Famo.us Carousel
+## Famo.us Carousel
 
 A responsive carousel / slideshow / slider powered by Famo.us.  Supports mouse, touch/swipe and keyboard navigation.<BR>
 
@@ -7,12 +7,12 @@ __UPDATE: 0.9.x introduces ES6 and a new require() path:__
 
 CommonJS:
 
-        var famousCarousel = require("famous-carousel/src/Carousel");
-        var carousel = new famousCarousel.Carousel( {...} );
+        var famousCarousel = require("famous-carousel").Carousel;
+        var carousel = new famousCarousel( {...} );
 
 Global:
 
-        var carousel = famousCarousel.default({
+        var carousel = famousCarousel.default( {...} );
 
 __If you see any unusual behavior after upgrading, delete node\_modules and run _npm install_ again__
 <BR>
@@ -192,6 +192,9 @@ Run tests (linter & style checks for now):
 
 **Q:** The arrows/dots aren't visible [against a white backgound].<BR>
 **A:** _dotBackColor_ and _arrowOutlineColor_ default to transparent. Set them to a different color.
+
+**Q:** The slides are shifted down and to the right.<BR>
+**A:** The selector element must not have any padding. The work-around for this [Famous engine bug](https://github.com/Famous/engine/issues/411) is to wrap the selector element in a container element which has the padding. Remove all padding from the selector element. See _example/index.html_ for... an example.
 
 ### To Do
 Pull requests are welcome. When submitting a PR, please make sure _npm run test_ passes.

@@ -139,14 +139,14 @@ export class Carousel {
 
 			carousel.arrows.next.node.setSizeMode(1, 1);
 			carousel.arrows.next.node.setAbsoluteSize(40, 40);
-			carousel.arrows.next.node.setPosition(-40, 0, 0);
+			carousel.arrows.next.node.setPosition(10, 0, 0);
 			carousel.arrows.next.node.setAlign(1, 0.5, 0);
 			carousel.arrows.next.node.setMountPoint(1, 0.5, 0);
 			_updateArrows(carousel.options.initialIndex);
 
 			carousel.dots.node.setSizeMode(1, 1);
 			carousel.dots.node.setAbsoluteSize(null, 20);
-			carousel.dots.node.setPosition(0, -30, 0);
+			// carousel.dots.node.setPosition(0, -30, 0);
 			carousel.dots.node.setAlign(0.5, 1, 0);
 			carousel.dots.node.setMountPoint(0.5, 1, 0);
 
