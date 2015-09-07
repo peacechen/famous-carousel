@@ -64,6 +64,16 @@ export class Pager {
 			if (i === this.currentIndex) {
 				r = physicsTransform.rotation;
 				page.node.setRotation(r[0], r[1], r[2], r[3]);
+
+				//Fire user callback when sliding is done.
+				if (Math.abs(xPos) === 0 && !page.animDoneCallbackFired) {
+					page.animDoneCallbackFired = true;
+					if (typeof this.options.animDoneCallback === "function") {
+						this.options.animDoneCallback(page.node, i);
+					}
+				}
+			} else {
+				page.animDoneCallbackFired = false;
 			}
 		}
 
@@ -202,7 +212,8 @@ export class Pager {
 				el: el,
 				box: box,
 				spring: spring,
-				anchor: anchor
+				anchor: anchor,
+				animDoneCallbackFired: false
 			});
 		}
 

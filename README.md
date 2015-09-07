@@ -39,7 +39,7 @@ famous-carousel uses Browserify require. Refer to the _example_ folder for boile
                         }
                     );
 
-  ####ES6 is now supported
+  #### _ES6_ is now supported
     import { Carousel } from "famous-carousel";
 
 ### Carousel Options
@@ -68,6 +68,14 @@ Example data:<BR>
                 "data": myFamousNode
             }
         ]
+
+* #### animStartCallback
+Type: `Function` (node, index)<BR>
+Callback fires when a slide starts to move into the center position. Parameters (node, index) are the slide's node and its corresponding _carouselData_ index.
+
+* #### animDoneCallback
+Type: `Function` (node, index)<BR>
+Callback fires when a slide has finished settling in the center visible position. Parameters (node, index) are the visible slide's node and its corresponding _carouselData_ index.
 
 * #### initialIndex
 Type: `Integer`<BR>
