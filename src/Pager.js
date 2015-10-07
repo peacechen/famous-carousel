@@ -115,9 +115,11 @@ export class Pager {
 			if (this.pages[i].el) {
 				this.pages[i].el.setProperty("display", "none");
 			}
+			this.pages[i].node.dismount();
 			this.options.parent.removeChild(this.pages[i].node);
+			delete this.pages[i].node;
 		}
-		this.pages = [];
+		delete this.pages;
 	}
 
 	createPages(options) {

@@ -67,24 +67,26 @@ var Carousel = function Carousel(carouselOptions) {
 	// Clear everything: slides, dots, arrows and carousel node.
 	// Call this if you don't intend to use the carousel anymore in the session.
 	carousel.clearAll = function () {
-		_famousCoreFamousEngine2["default"].stopEngine(); // Seems needed to prevent errors removing nodes.
 		this.clearSlides();
 		carousel.root.removeChild(carousel.dots.node);
-		carousel.dots.node = null;
+		delete carousel.dots.node;
 		carousel.root.removeChild(carousel.pager.node);
-		carousel.pager.node = null;
+		delete carousel.pager.node;
 
 		for (var arrow in carousel.arrows) {
 			carousel.arrows[arrow].remove();
 			delete carousel.arrows[arrow];
-			carousel.arrows[arrow] = null;
 		}
-		carousel.arrows = null;
+		delete carousel.arrows;
+
+		carousel.root.dismount();
+		carousel.context.removeChild(carousel.root);
+		delete carousel.root;
+
+		carousel.context.dismount();
+		_famousCoreFamousEngine2["default"].removeScene(carousel.context);
 
 		window.removeEventListener("keydown", _keyHandler);
-		carousel.context.removeChild(carousel.root);
-		carousel.root = null;
-		carousel.context.dismount();
 
 		//DOMElement bug https://github.com/Famous/engine/issues/245
 		var container = document.querySelector(carousel.options.selector);
@@ -214,6 +216,10 @@ var Carousel = function Carousel(carouselOptions) {
 					currentIndex = newIndex;
 					carousel.dots.pageChange(oldIndex, currentIndex);
 					carousel.pager.pageChange(oldIndex, currentIndex);
+
+					if (typeof carousel.options.animStartCallback === "function") {
+						carousel.options.animStartCallback(carousel.pager.pages[currentIndex].node, currentIndex);
+					}
 				}
 			}
 		};

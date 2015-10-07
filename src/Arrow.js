@@ -78,6 +78,8 @@ export class Arrow {
 
 		//DOMElement bug https://github.com/Famous/engine/issues/245
 		this.el.setProperty("display", "none");
+		this.node.dismount();
 		this.parent.removeChild(this.node);
+		delete this.node;
 	}
 }

@@ -57,6 +57,7 @@ This specifies the content of the slides. It is an array of objects, each contai
 _type_ may be `image`, `markup`, or `node`.<BR>
 _data_ must be a url for image, any valid html for markup, or a Famo.us node object.<BR>
 Example data:<BR>
+```JSON
         [
             {   "type": "image",
                 "data": "http://myDomain/myPicture.jpg"
@@ -68,6 +69,7 @@ Example data:<BR>
                 "data": myFamousNode
             }
         ]
+```
 
 * #### animStartCallback
 Type: `Function` (node, index)<BR>

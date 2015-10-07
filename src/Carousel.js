@@ -52,24 +52,26 @@ export class Carousel {
 		// Clear everything: slides, dots, arrows and carousel node.
 		// Call this if you don't intend to use the carousel anymore in the session.
 		carousel.clearAll = function() {
-			FamousEngine.stopEngine(); // Seems needed to prevent errors removing nodes.
 			this.clearSlides();
 			carousel.root.removeChild(carousel.dots.node);
-			carousel.dots.node = null;
+			delete carousel.dots.node;
 			carousel.root.removeChild(carousel.pager.node);
-			carousel.pager.node = null;
+			delete carousel.pager.node;
 
 			for (var arrow in carousel.arrows) {
 				carousel.arrows[arrow].remove();
 				delete carousel.arrows[arrow];
-				carousel.arrows[arrow] = null;
 			}
-			carousel.arrows = null;
+			delete carousel.arrows;
+
+			carousel.root.dismount();
+			carousel.context.removeChild(carousel.root);
+			delete carousel.root;
+
+			carousel.context.dismount();
+			FamousEngine.removeScene(carousel.context);
 
 			window.removeEventListener("keydown", _keyHandler);
-			carousel.context.removeChild(carousel.root);
-			carousel.root = null;
-			carousel.context.dismount();
 
 			//DOMElement bug https://github.com/Famous/engine/issues/245
 			var container = document.querySelector(carousel.options.selector);

@@ -93,9 +93,11 @@ var Dots = (function () {
 			for (var i = 0; i < this.dots.length; i++) {
 				//DOMElement bug https://github.com/Famous/engine/issues/245
 				this.dots[i].el.setProperty("display", "none");
+				this.dots[i].node.dismount();
 				this.node.removeChild(this.dots[i].node);
+				delete this.dots[i].node;
 			}
-			this.dots = [];
+			delete this.dots;
 		}
 	}]);
 
