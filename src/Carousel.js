@@ -2,10 +2,11 @@
  * Carousel.js
  */
 
+import {core} from "famous";
 import {Arrow} from "./Arrow";
 import {Pager} from "./Pager";
 import {Dots} from "./Dots";
-import FamousEngine from "famous/core/FamousEngine";
+var FamousEngine = core.FamousEngine;
 
 export class Carousel {
 
