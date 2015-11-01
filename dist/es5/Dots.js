@@ -1,24 +1,23 @@
-/**
- * Dots.js
- */
-
 "use strict";
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * Dots.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        */
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.Dot = exports.Dots = undefined;
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _DOMElement = require("famous/dom-renderables/DOMElement");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var _DOMElement2 = _interopRequireDefault(_DOMElement);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _famousDomRenderablesDOMElement = require("famous/dom-renderables/DOMElement");
-
-var _famousDomRenderablesDOMElement2 = _interopRequireDefault(_famousDomRenderablesDOMElement);
-
-var Dots = (function () {
+var Dots = exports.Dots = (function () {
 	function Dots(options) {
 		_classCallCheck(this, Dots);
 
@@ -67,10 +66,11 @@ var Dots = (function () {
 			// Highlight the first/initial dot in the collection
 			this.dots[this.initialIndex].select(this.options);
 		}
-	}, {
-		key: "layoutDots",
 
 		// Evenly space out the dots
+
+	}, {
+		key: "layoutDots",
 		value: function layoutDots(x) {
 			//unused vars: y, z
 			var totalDotSize = this.width * this.numPages + this.spacing * (this.numPages - 1);
@@ -79,10 +79,11 @@ var Dots = (function () {
 				this.dots[i].node.setPosition(start + (this.width + this.spacing) * i, 0, 0);
 			}
 		}
-	}, {
-		key: "pageChange",
 
 		// Update the selected dots on change of current page.
+
+	}, {
+		key: "pageChange",
 		value: function pageChange(oldIndex, newIndex) {
 			this.dots[oldIndex].deselect(this.options);
 			this.dots[newIndex].select(this.options);
@@ -104,14 +105,12 @@ var Dots = (function () {
 	return Dots;
 })();
 
-exports.Dots = Dots;
-
-var Dot = (function () {
+var Dot = exports.Dot = (function () {
 	function Dot(node, options) {
 		_classCallCheck(this, Dot);
 
 		this.node = node;
-		this.el = new _famousDomRenderablesDOMElement2["default"](node);
+		this.el = new _DOMElement2.default(node);
 		this.el.setProperty("borderRadius", "5px");
 		this.el.setProperty("boxSizing", "border-box");
 		if (options.cssUnselectedClass && typeof options.cssUnselectedClass === "string") {
@@ -148,6 +147,4 @@ var Dot = (function () {
 
 	return Dot;
 })();
-
-exports.Dot = Dot;
 

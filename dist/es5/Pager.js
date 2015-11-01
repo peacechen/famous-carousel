@@ -1,49 +1,48 @@
-/**
- * Pager.js
- */
-
 "use strict";
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * Pager.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        */
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.Pager = undefined;
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _DOMElement = require("famous/dom-renderables/DOMElement");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var _DOMElement2 = _interopRequireDefault(_DOMElement);
+
+var _PhysicsEngine = require("famous/physics/PhysicsEngine");
+
+var _PhysicsEngine2 = _interopRequireDefault(_PhysicsEngine);
+
+var _FamousEngine = require("famous/core/FamousEngine");
+
+var _FamousEngine2 = _interopRequireDefault(_FamousEngine);
+
+var _GestureHandler = require("famous/components/GestureHandler");
+
+var _GestureHandler2 = _interopRequireDefault(_GestureHandler);
+
+var _physics = require("famous/physics");
+
+var _physics2 = _interopRequireDefault(_physics);
+
+var _math = require("famous/math");
+
+var _math2 = _interopRequireDefault(_math);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _famousDomRenderablesDOMElement = require("famous/dom-renderables/DOMElement");
-
-var _famousDomRenderablesDOMElement2 = _interopRequireDefault(_famousDomRenderablesDOMElement);
-
-var _famousPhysicsPhysicsEngine = require("famous/physics/PhysicsEngine");
-
-var _famousPhysicsPhysicsEngine2 = _interopRequireDefault(_famousPhysicsPhysicsEngine);
-
-var _famousCoreFamousEngine = require("famous/core/FamousEngine");
-
-var _famousCoreFamousEngine2 = _interopRequireDefault(_famousCoreFamousEngine);
-
-var _famousComponentsGestureHandler = require("famous/components/GestureHandler");
-
-var _famousComponentsGestureHandler2 = _interopRequireDefault(_famousComponentsGestureHandler);
-
-var _famousPhysics = require("famous/physics");
-
-var _famousPhysics2 = _interopRequireDefault(_famousPhysics);
-
-var _famousMath = require("famous/math");
-
-var _famousMath2 = _interopRequireDefault(_famousMath);
-
-var Box = _famousPhysics2["default"].Box;
-var Spring = _famousPhysics2["default"].Spring;
-var Vec3 = _famousMath2["default"].Vec3;
+var Box = _physics2.default.Box;
+var Spring = _physics2.default.Spring;
+var Vec3 = _math2.default.Vec3;
 var hideAngle = Math.PI / 2;
 
-var Pager = (function () {
+var Pager = exports.Pager = (function () {
 	function Pager(options) {
 		var _this = this;
 
@@ -57,7 +56,7 @@ var Pager = (function () {
 		this.pageWidth = 0;
 
 		// Add a physics simulation and update this instance using regular time updates from the clock.
-		this.simulation = new _famousPhysicsPhysicsEngine2["default"]();
+		this.simulation = new _PhysicsEngine2.default();
 
 		var resizeComponent = {
 			onSizeChange: function onSizeChange(x) {
@@ -67,7 +66,7 @@ var Pager = (function () {
 		this.node.addComponent(resizeComponent);
 
 		// .requestUpdate will call the .onUpdate method next frame, passing in the time stamp for that frame
-		_famousCoreFamousEngine2["default"].requestUpdate(this);
+		_FamousEngine2.default.requestUpdate(this);
 
 		this.createPages(this.options);
 	}
@@ -113,7 +112,7 @@ var Pager = (function () {
 				}
 			}
 
-			_famousCoreFamousEngine2["default"].requestUpdateOnNextTick(this);
+			_FamousEngine2.default.requestUpdateOnNextTick(this);
 		}
 	}, {
 		key: "pageChange",
@@ -166,17 +165,21 @@ var Pager = (function () {
 
 			for (var i = 0; i < options.carouselData.length; i++) {
 				var slide, el;
+				var backgroundSize = options.carouselData[i].backgroundSize;
 
 				if (options.carouselData[i].type === "node") {
 					slide = options.carouselData[i].data;
 				} else {
 					slide = this.node.addChild();
-					el = new _famousDomRenderablesDOMElement2["default"](slide);
+					el = new _DOMElement2.default(slide);
+					if (typeof backgroundSize !== "string") {
+						backgroundSize = "contain";
+					}
 					switch (options.carouselData[i].type) {
 						case "image":
 							el.setProperty("backgroundImage", "url(" + options.carouselData[i].data + ")");
 							el.setProperty("background-repeat", "no-repeat");
-							el.setProperty("background-size", "contain");
+							el.setProperty("background-size", backgroundSize);
 							el.setProperty("background-position", "center");
 							break;
 						case "markup":
@@ -189,7 +192,7 @@ var Pager = (function () {
 				slide.setMountPoint(0.5, 0.5);
 				slide.setOrigin(0.5, 0.5);
 
-				var gestureHandler = new _famousComponentsGestureHandler2["default"](slide);
+				var gestureHandler = new _GestureHandler2.default(slide);
 				/*eslint-disable */
 				gestureHandler.on("drag", (function (index, e) {
 					this.force.set(e.centerDelta.x, 0, 0); // Add a force equal to change in X direction
@@ -264,6 +267,4 @@ var Pager = (function () {
 
 	return Pager;
 })();
-
-exports.Pager = Pager;
 

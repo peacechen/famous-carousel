@@ -127,17 +127,21 @@ export class Pager {
 
 		for (var i = 0; i < options.carouselData.length; i++) {
 			var slide, el;
+			var backgroundSize = options.carouselData[i].backgroundSize;
 
 			if (options.carouselData[i].type === "node") {
 				slide = options.carouselData[i].data;
 			} else {
 				slide = this.node.addChild();
 				el = new DOMElement(slide);
+				if(typeof backgroundSize !== "string") {
+					backgroundSize = "contain";
+				}
 				switch (options.carouselData[i].type) {
 					case "image":
 						el.setProperty("backgroundImage", "url(" + options.carouselData[i].data + ")");
 						el.setProperty("background-repeat", "no-repeat");
-						el.setProperty("background-size", "contain");
+						el.setProperty("background-size", backgroundSize);
 						el.setProperty("background-position", "center");
 						break;
 					case "markup":

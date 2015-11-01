@@ -1,32 +1,31 @@
-/**
- * Arrow.js
- */
-
 "use strict";
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * Arrow.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        */
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.Arrow = undefined;
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _FamousEngine = require("famous/core/FamousEngine");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var _FamousEngine2 = _interopRequireDefault(_FamousEngine);
+
+var _DOMElement = require("famous/dom-renderables/DOMElement");
+
+var _DOMElement2 = _interopRequireDefault(_DOMElement);
+
+var _GestureHandler = require("famous/components/GestureHandler");
+
+var _GestureHandler2 = _interopRequireDefault(_GestureHandler);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _famousCoreFamousEngine = require("famous/core/FamousEngine");
-
-var _famousCoreFamousEngine2 = _interopRequireDefault(_famousCoreFamousEngine);
-
-var _famousDomRenderablesDOMElement = require("famous/dom-renderables/DOMElement");
-
-var _famousDomRenderablesDOMElement2 = _interopRequireDefault(_famousDomRenderablesDOMElement);
-
-var _famousComponentsGestureHandler = require("famous/components/GestureHandler");
-
-var _famousComponentsGestureHandler2 = _interopRequireDefault(_famousComponentsGestureHandler);
-
-var Arrow = (function () {
+var Arrow = exports.Arrow = (function () {
 	function Arrow(options) {
 		_classCallCheck(this, Arrow);
 
@@ -38,7 +37,7 @@ var Arrow = (function () {
 		this.direction = options.direction;
 		this.manualSlidesToAdvance = options.manualSlidesToAdvance;
 
-		this.el = new _famousDomRenderablesDOMElement2["default"](this.node);
+		this.el = new _DOMElement2.default(this.node);
 		this.el.setProperty("fontSize", "40px");
 		this.el.setProperty("lineHeight", "40px");
 		this.el.setProperty("cursor", "pointer");
@@ -52,12 +51,12 @@ var Arrow = (function () {
 		}
 		this.el.setContent(this.direction === 1 ? ">" : "<");
 
-		this.gestures = new _famousComponentsGestureHandler2["default"](this.node);
+		this.gestures = new _GestureHandler2.default(this.node);
 		this.gestures.on("tap", this.emitPageChange.bind(this));
 
 		//GestureHandler doesn't work for IE<11. Add a handler for it. Yuk!
 		if (navigator.userAgent.indexOf("MSIE") !== -1) {
-			_famousCoreFamousEngine2["default"].requestUpdate(this);
+			_FamousEngine2.default.requestUpdate(this);
 		}
 	}
 
@@ -68,7 +67,7 @@ var Arrow = (function () {
 			//IE hack to support clicks. Look for element after it's rendered & attach handler.
 			this.arrowEl = document.querySelector("[data-fa-path='" + this.el._attributes["data-fa-path"] + "']");
 			if (!this.arrowEl) {
-				_famousCoreFamousEngine2["default"].requestUpdate(this);
+				_FamousEngine2.default.requestUpdate(this);
 			} else {
 				this.arrowEl.attachEvent("onclick", this.emitPageChange.bind(this));
 			}
@@ -108,6 +107,4 @@ var Arrow = (function () {
 
 	return Arrow;
 })();
-
-exports.Arrow = Arrow;
 

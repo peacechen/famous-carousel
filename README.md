@@ -53,14 +53,16 @@ As an object, _selector_ is assumed to be a Famous node.
 
 * #### carouselData (required)
 Type: `Array`<BR>
-This specifies the content of the slides. It is an array of objects, each containing _type_ and _data_ keys.<BR>
-_type_ may be `image`, `markup`, or `node`.<BR>
-_data_ must be a url for image, any valid html for markup, or a Famo.us node object.<BR>
+This specifies the content of the slides. It is an array of objects, each containing _type_, _data_, and optionally _backgroundSize_ keys.<BR>
+_type_: may be `image`, `markup`, or `node`.<BR>
+_data_: must be a url for image, any valid html for markup, or a Famo.us node object.<BR>
+_backgroundSize_: [optional] CSS background-size attribute (default `contain`)<BR>
 Example data:<BR>
 ```JSON
         [
             {   "type": "image",
-                "data": "http://myDomain/myPicture.jpg"
+                "data": "http://myDomain/myPicture.jpg",
+                "backgroundSize": "cover"
             },
             {   "type": "markup",
                 "data": "<div style='color:blue'>Hello World<BR><BR>It's me!</div>"

@@ -3,12 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.Pager = exports.Dots = exports.Arrow = exports.Carousel = undefined;
 
-var _Carousel = require("./Carousel");
-
-exports["default"] = function (options) {
+exports.default = function (options) {
 	return new _Carousel.Carousel(options);
 };
+
+var _Carousel = require("./Carousel");
 
 Object.defineProperty(exports, "Carousel", {
 	enumerable: true,

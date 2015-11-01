@@ -1,16 +1,11 @@
-/**
- * Carousel.js
- */
-
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.Carousel = undefined;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _famous = require("famous");
 
 var _Arrow = require("./Arrow");
 
@@ -18,22 +13,26 @@ var _Pager = require("./Pager");
 
 var _Dots = require("./Dots");
 
-var _famousCoreFamousEngine = require("famous/core/FamousEngine");
+function _typeof(obj) { return obj && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
-var _famousCoreFamousEngine2 = _interopRequireDefault(_famousCoreFamousEngine);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } /**
+                                                                                                                                                           * Carousel.js
+                                                                                                                                                           */
 
-var Carousel = function Carousel(carouselOptions) {
+var FamousEngine = _famous.core.FamousEngine;
+
+var Carousel = exports.Carousel = function Carousel(carouselOptions) {
 	_classCallCheck(this, Carousel);
 
 	var context;
-	switch (typeof carouselOptions.selector) {
+	switch (_typeof(carouselOptions.selector)) {
 		case "object":
 			context = carouselOptions.selector; //famous node
 			break;
 		case "undefined":
 		case "string":
-			_famousCoreFamousEngine2["default"].init();
-			context = _famousCoreFamousEngine2["default"].createScene(carouselOptions.selector);
+			FamousEngine.init();
+			context = FamousEngine.createScene(carouselOptions.selector);
 			break;
 		default:
 			throw "famous-carousel: unsupported selector type";
@@ -84,7 +83,7 @@ var Carousel = function Carousel(carouselOptions) {
 		delete carousel.root;
 
 		carousel.context.dismount();
-		_famousCoreFamousEngine2["default"].removeScene(carousel.context);
+		FamousEngine.removeScene(carousel.context);
 
 		window.removeEventListener("keydown", _keyHandler);
 
@@ -259,6 +258,4 @@ var Carousel = function Carousel(carouselOptions) {
 
 	return carousel;
 };
-
-exports.Carousel = Carousel;
 
