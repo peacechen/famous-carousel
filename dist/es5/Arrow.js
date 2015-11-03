@@ -74,12 +74,14 @@ var Arrow = exports.Arrow = (function () {
 		}
 	}, {
 		key: "emitPageChange",
-		value: function emitPageChange() {
-			this.context.emit("pageChange", {
-				direction: this.direction,
-				numSlidesToAdvance: this.manualSlidesToAdvance,
-				stopAutoPlay: true
-			});
+		value: function emitPageChange(e) {
+			if (e.status === "start") {
+				this.context.emit("pageChange", {
+					direction: this.direction,
+					numSlidesToAdvance: this.manualSlidesToAdvance,
+					stopAutoPlay: true
+				});
+			}
 		}
 	}, {
 		key: "setEnableState",

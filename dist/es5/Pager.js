@@ -51,8 +51,7 @@ var Pager = exports.Pager = (function () {
 		this.options = options;
 		this.node = options.parent.addChild();
 		this.currentIndex = options.initialIndex || 0;
-		this.threshold = 4000;
-		this.force = new Vec3();
+		this.threshold = 0.3;
 		this.pageWidth = 0;
 
 		// Add a physics simulation and update this instance using regular time updates from the clock.
@@ -140,8 +139,30 @@ var Pager = exports.Pager = (function () {
 				this.pages[oldIndex].node.setRotation(0, hideAngle, 0);
 			}
 
-			this.pages[newIndex].anchor.set(0, 0, 0);
-			this.pages[newIndex].node.setRotation(0, 0, 0);
+			var visibleSlides = this.adjacentSlides(newIndex);
+			var yRotation;
+			for (var i = 0; i < this.pages.length; i++) {
+				yRotation = hideAngle;
+				for (var key in visibleSlides) {
+					if (visibleSlides[key] === i) {
+						yRotation = 0;
+						switch (key) {
+							case "left":
+								xOffset = -1;
+								break;
+							case "center":
+								xOffset = 0;
+								break;
+							case "right":
+								xOffset = 1;
+								break;
+						}
+						this.pages[i].anchor.set(xOffset, 0, 0);
+					}
+				}
+				this.pages[i].node.setRotation(0, yRotation, 0);
+			}
+
 			this.currentIndex = newIndex;
 		}
 	}, {
@@ -195,31 +216,64 @@ var Pager = exports.Pager = (function () {
 				var gestureHandler = new _GestureHandler2.default(slide);
 				/*eslint-disable */
 				gestureHandler.on("drag", (function (index, e) {
-					this.force.set(e.centerDelta.x, 0, 0); // Add a force equal to change in X direction
-					this.force.scale(20); // Scale the force up
-					this.pages[index].box.applyForce(this.force); // Apply the force to the `Box` body
+					switch (e.status) {
+						case "start":
+							this.draggedIndex = index;
+							return;
+						case "move":
+							if (this.draggedIndex !== index) {
+								return;
+							}
+							break;
+						case "end":
+							// Snap anchor back to center on release
+							if (this.draggedIndex === index) {
+								if (this.pages[index].anchor.x !== 0) {
+									this.pages[index].anchor.set(0, 0, 0);
+									var visibleSlides = this.adjacentSlides(index);
+									if (!isNaN(visibleSlides.left)) {
+										this.pages[visibleSlides.left].anchor.set(-1, 0, 0);
+									}
+									if (!isNaN(visibleSlides.right)) {
+										this.pages[visibleSlides.right].anchor.set(1, 0, 0);
+									}
+								}
+							}
+							this.draggedIndex = -1;
+							return;
+						default:
+							return;
+					}
 
-					var direction = 0;
-					if (e.centerVelocity.x > this.threshold) {
-						if (this.draggedIndex === index && this.currentIndex === index) {
-							// Move index to left
-							direction = -1;
+					var visibleSlides = this.adjacentSlides(index);
+					var anchorXoffset;
+					for (var key in visibleSlides) {
+						var idx = visibleSlides[key];
+						if (isNaN(idx)) {
+							continue;
 						}
-					} else if (e.centerVelocity.x < -this.threshold) {
-						if (this.draggedIndex === index && this.currentIndex === index) {
-							direction = 1;
+						anchorXoffset = e.centerDelta.x / this.pages[idx].node.getSize()[0];
+						anchorXoffset += this.pages[idx].anchor.x;
+						this.pages[idx].anchor.set(anchorXoffset, 0, 0);
+					}
+
+					// Fire page change event if slide has moved beyond threshold
+					var direction = 0;
+					if (this.draggedIndex === index && this.currentIndex === index) {
+						if (anchorXoffset >= this.threshold) {
+							direction = -1; // left
+						}
+						if (anchorXoffset <= -this.threshold) {
+							direction = 1; // right
 						}
 					}
 					if (direction !== 0) {
+						this.draggedIndex = -1;
 						this.options.context.emit("pageChange", {
 							direction: direction,
 							numSlidesToAdvance: this.options.manualSlidesToAdvance,
 							stopAutoPlay: true
 						});
-					}
-
-					if (e.status === "start") {
-						this.draggedIndex = index;
 					}
 				}).bind(this, i));
 				/*eslint-enable */
@@ -262,6 +316,24 @@ var Pager = exports.Pager = (function () {
 			}
 
 			this.pages = pages;
+		}
+
+		// Find slides adjacent to the current index. Returns an object with keys
+		// left, center, right.
+		// If input slide is at either end, the left or right values are undefined.
+
+	}, {
+		key: "adjacentSlides",
+		value: function adjacentSlides(centerIndex) {
+			var slides = {};
+			slides.left = centerIndex - 1;
+			slides.right = centerIndex + 1;
+
+			slides.left = slides.left < 0 ? undefined : slides.left;
+			slides.right = slides.right >= this.pages.length ? undefined : slides.right;
+			slides.center = centerIndex;
+
+			return slides;
 		}
 	}]);
 
