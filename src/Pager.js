@@ -82,6 +82,7 @@ export class Pager {
 	pageChange(oldIndex, newIndex) {
 		var xOffset;
 		var reshuffle = false;
+		var i;
 		// Wrap-around cases shuffle pages to other side.
 		if (oldIndex === this.pages.length - 1 && newIndex === 0) {
 			xOffset = 1;
@@ -92,7 +93,7 @@ export class Pager {
 		}
 
 		if (reshuffle) {
-			for (var i = 0; i < this.pages.length; i++) {
+			for (i = 0; i < this.pages.length; i++) {
 				this.pages[i].anchor.set(xOffset, 0, 0);
 				this.pages[i].node.setRotation(0, hideAngle, 0);
 			}
@@ -105,12 +106,12 @@ export class Pager {
 
 		var visibleSlides = this.adjacentSlides(newIndex);
 		var yRotation;
-		for (var i = 0; i < this.pages.length; i++) {
+		for (i = 0; i < this.pages.length; i++) {
 			yRotation = hideAngle;
 			for (var key in visibleSlides) {
 				if (visibleSlides[key] === i) {
 					yRotation = 0;
-					switch(key) {
+					switch (key) {
 						case "left":
 							xOffset = -1;
 							break;
@@ -155,7 +156,7 @@ export class Pager {
 			} else {
 				slide = this.node.addChild();
 				el = new DOMElement(slide);
-				if(typeof backgroundSize !== "string") {
+				if (typeof backgroundSize !== "string") {
 					backgroundSize = "contain";
 				}
 				switch (options.carouselData[i].type) {
@@ -183,20 +184,20 @@ export class Pager {
 						this.draggedIndex = index;
 						return;
 					case "move":
-						if(this.draggedIndex !== index) {
+						if (this.draggedIndex !== index) {
 							return;
 						}
 						break;
 					case "end":
 						// Snap anchor back to center on release
-						if(this.draggedIndex === index) {
-							if(this.pages[index].anchor.x !== 0) {
+						if (this.draggedIndex === index) {
+							if (this.pages[index].anchor.x !== 0) {
 								this.pages[index].anchor.set(0, 0, 0);
 								var visibleSlides = this.adjacentSlides(index);
-								if(!isNaN(visibleSlides.left)) {
+								if (!isNaN(visibleSlides.left)) {
 									this.pages[visibleSlides.left].anchor.set(-1, 0, 0);
 								}
-								if(!isNaN(visibleSlides.right)) {
+								if (!isNaN(visibleSlides.right)) {
 									this.pages[visibleSlides.right].anchor.set(1, 0, 0);
 								}
 							}
@@ -211,7 +212,7 @@ export class Pager {
 				var anchorXoffset;
 				for (var key in visibleSlides) {
 					var idx = visibleSlides[key];
-					if(isNaN(idx)) {
+					if (isNaN(idx)) {
 						continue;
 					}
 					anchorXoffset = e.centerDelta.x / this.pages[idx].node.getSize()[0];
@@ -222,10 +223,10 @@ export class Pager {
 				// Fire page change event if slide has moved beyond threshold
 				var direction = 0;
 				if (this.draggedIndex === index && this.currentIndex === index) {
-					if(anchorXoffset >= this.threshold) {
+					if (anchorXoffset >= this.threshold) {
 						direction = -1; // left
 					}
-					if(anchorXoffset <= -this.threshold) {
+					if (anchorXoffset <= -this.threshold) {
 						direction = 1; // right
 					}
 				}

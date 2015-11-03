@@ -118,6 +118,7 @@ var Pager = exports.Pager = (function () {
 		value: function pageChange(oldIndex, newIndex) {
 			var xOffset;
 			var reshuffle = false;
+			var i;
 			// Wrap-around cases shuffle pages to other side.
 			if (oldIndex === this.pages.length - 1 && newIndex === 0) {
 				xOffset = 1;
@@ -128,7 +129,7 @@ var Pager = exports.Pager = (function () {
 			}
 
 			if (reshuffle) {
-				for (var i = 0; i < this.pages.length; i++) {
+				for (i = 0; i < this.pages.length; i++) {
 					this.pages[i].anchor.set(xOffset, 0, 0);
 					this.pages[i].node.setRotation(0, hideAngle, 0);
 				}
@@ -141,7 +142,7 @@ var Pager = exports.Pager = (function () {
 
 			var visibleSlides = this.adjacentSlides(newIndex);
 			var yRotation;
-			for (var i = 0; i < this.pages.length; i++) {
+			for (i = 0; i < this.pages.length; i++) {
 				yRotation = hideAngle;
 				for (var key in visibleSlides) {
 					if (visibleSlides[key] === i) {

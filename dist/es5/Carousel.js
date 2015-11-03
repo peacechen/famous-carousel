@@ -31,6 +31,7 @@ var Carousel = exports.Carousel = function Carousel(carouselOptions) {
 			break;
 		case "string":
 			document.querySelector(carouselOptions.selector).style.overflow = "hidden";
+		/* falls through */
 		case "undefined":
 			FamousEngine.init();
 			context = FamousEngine.createScene(carouselOptions.selector);
