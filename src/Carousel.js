@@ -16,8 +16,9 @@ export class Carousel {
 			case "object":
 				context = carouselOptions.selector; //famous node
 				break;
-			case "undefined":
 			case "string":
+				document.querySelector(carouselOptions.selector).style.overflow = "hidden";
+			case "undefined":
 				FamousEngine.init();
 				context = FamousEngine.createScene(carouselOptions.selector);
 				break;

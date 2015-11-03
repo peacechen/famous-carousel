@@ -49,7 +49,7 @@ The following keys are supported in the options object. Only _carouselData_ is r
 Type: `String` or `Object`<BR>
 Default: `body`<BR>
 As a string, _selector_ is a CSS selector of the element to render into.<BR>
-As an object, _selector_ is assumed to be a Famous node.
+As an object, _selector_ is assumed to be a Famous node. The node's container should have overflow set to hidden.
 
 * #### carouselData (required)
 Type: `Array`<BR>
