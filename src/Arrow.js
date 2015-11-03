@@ -55,12 +55,14 @@ export class Arrow {
 		}
 	}
 
-	emitPageChange() {
-		this.context.emit("pageChange", {
-			direction: this.direction,
-			numSlidesToAdvance: this.manualSlidesToAdvance,
-			stopAutoPlay: true
-		});
+	emitPageChange(e) {
+		if(e.status === "start") {
+			this.context.emit("pageChange", {
+				direction: this.direction,
+				numSlidesToAdvance: this.manualSlidesToAdvance,
+				stopAutoPlay: true
+			});
+		}
 	}
 
 	setEnableState(enable) {
