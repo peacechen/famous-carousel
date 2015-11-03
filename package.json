@@ -1,6 +1,6 @@
 {
   "name": "famous-carousel",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "author": "Peace Chen",
   "contributors": ["Tony Alves (https://github.com/talves)"],
   "license": "MIT",
@@ -36,11 +36,6 @@
   "browserify": {
     "transform": [
       "babelify"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "es2015"
     ]
   },
   "devDependencies": {
