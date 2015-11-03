@@ -16,6 +16,7 @@ export class Arrow {
 		this.outlineColor = options.outlineColor || "transparent";
 		this.direction = options.direction;
 		this.manualSlidesToAdvance = options.manualSlidesToAdvance;
+		this.clickTime = 0;
 
 		this.el = new DOMElement(this.node);
 		this.el.setProperty("fontSize", "40px");
@@ -56,7 +57,8 @@ export class Arrow {
 	}
 
 	emitPageChange(e) {
-		if(e.status === "start") {
+		if (e.time - this.clickTime > 200) { //debounce touch
+			this.clickTime = e.time;
 			this.context.emit("pageChange", {
 				direction: this.direction,
 				numSlidesToAdvance: this.manualSlidesToAdvance,
