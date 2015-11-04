@@ -200,9 +200,9 @@ var Pager = exports.Pager = (function () {
 					switch (options.carouselData[i].type) {
 						case "image":
 							el.setProperty("backgroundImage", "url(" + options.carouselData[i].data + ")");
-							el.setProperty("background-repeat", "no-repeat");
-							el.setProperty("background-size", backgroundSize);
-							el.setProperty("background-position", "center");
+							el.setProperty("backgroundRepeat", "no-repeat");
+							el.setProperty("backgroundSize", backgroundSize);
+							el.setProperty("backgroundPosition", "center");
 							break;
 						case "markup":
 							el.setContent(options.carouselData[i].data);

@@ -1,3 +1,6 @@
+
+require("babel-polyfill"); //ES6 for-loop polyfill https://github.com/babel/babel/issues/711
+
 import {Carousel} from "./Carousel";
 
 export default function(options) {

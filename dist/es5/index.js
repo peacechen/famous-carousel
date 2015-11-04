@@ -45,3 +45,5 @@ Object.defineProperty(exports, "Pager", {
 	}
 });
 
+require("babel-polyfill"); //ES6 for-loop polyfill https://github.com/babel/babel/issues/711
+

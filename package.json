@@ -1,6 +1,6 @@
 {
   "name": "famous-carousel",
-  "version": "0.9.10",
+  "version": "0.9.11",
   "author": "Peace Chen",
   "contributors": ["Tony Alves (https://github.com/talves)"],
   "license": "MIT",
@@ -49,6 +49,7 @@
     "uglifyify": "^3.0.1"
   },
   "dependencies": {
+    "babel-polyfill": "^6.0.16",
     "famous": "git://github.com/peacechen/engine#af98b6c"
   }
 }
