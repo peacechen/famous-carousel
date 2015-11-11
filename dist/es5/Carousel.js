@@ -30,7 +30,9 @@ var Carousel = exports.Carousel = function Carousel(carouselOptions) {
 			context = carouselOptions.selector; //famous node
 			break;
 		case "string":
-			document.querySelector(carouselOptions.selector).style.overflow = "hidden";
+			var carouselSelector = document.querySelector(carouselOptions.selector);
+			carouselSelector.style.overflow = "hidden";
+			carouselSelector.style.position = "relative";
 		/* falls through */
 		case "undefined":
 			FamousEngine.init();

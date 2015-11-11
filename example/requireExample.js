@@ -71,9 +71,9 @@ function animStartCallback(node, index) {
 function addBackground(node, url) {
     var el = new DOMElement(node);
     el.setProperty("backgroundImage", "url(" + url + ")");
-    el.setProperty("background-repeat", "no-repeat");
-    el.setProperty("background-size", "contain");
-    el.setProperty("background-position", "center");
+    el.setProperty("backgroundRepeat", "no-repeat");
+    el.setProperty("backgroundSize", "contain");
+    el.setProperty("backgroundPosition", "center");
     node.setPosition(0, 0, -2); // -2 due to Chrome bug https://code.google.com/p/chromium/issues/detail?id=499397
 }
 

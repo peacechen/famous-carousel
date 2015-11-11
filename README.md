@@ -192,9 +192,12 @@ Run tests (linter & style checks for now):
 **A:** famous-carousel sizes to its container's dimensions. Due to CSS box model rules, if no height is specified for the container, the default auto height computes to 0. Short answer: set a height for its parents all the way up to the root element.
 
 **Q:** The slides appear from outside the containing element when animating.<BR>
-**A:** Set the container's overflow property to _hidden_. Additionally center the famous-carousel within the containing element using these properties:
+**A:** Famous-carousel sets the container's overflow property to _hidden_. Check if something has overridden that property.
 
-    .myContainerClass {
+**Q:** How to center the slides?<BR>
+**A:** Create a parent div of the container and set these properties:
+
+    .myContainersParent {
         overflow:hidden;
         position:absolute;
         left:0; right:0;
@@ -202,7 +205,7 @@ Run tests (linter & style checks for now):
         margin:auto;
     }
 
-**Q:** The arrows/dots aren't visible [against a white backgound].<BR>
+**Q:** The arrows/dots aren't visible [against a white background].<BR>
 **A:** _dotBackColor_ and _arrowOutlineColor_ default to transparent. Set them to a different color.
 
 **Q:** The slides are shifted down and to the right.<BR>
