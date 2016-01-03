@@ -35,6 +35,11 @@ export class Pager {
 		FamousEngine.requestUpdate(this);
 
 		this.createPages(this.options);
+
+		// Fire animStartCallback for first slide.
+		if (typeof this.options.animStartCallback === "function") {
+			this.options.animStartCallback(this.pages[this.currentIndex].node, this.currentIndex);
+		}
 	}
 
 	onUpdate(time) {
@@ -129,6 +134,10 @@ export class Pager {
 		}
 
 		this.currentIndex = newIndex;
+
+		if (typeof this.options.animStartCallback === "function") {
+			this.options.animStartCallback(this.pages[this.currentIndex].node, this.currentIndex);
+		}
 	}
 
 	removePages() {

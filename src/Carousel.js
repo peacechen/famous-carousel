@@ -206,10 +206,6 @@ export class Carousel {
 						currentIndex = newIndex;
 						carousel.dots.pageChange(oldIndex, currentIndex);
 						carousel.pager.pageChange(oldIndex, currentIndex);
-
-						if (typeof carousel.options.animStartCallback === "function") {
-							carousel.options.animStartCallback(carousel.pager.pages[currentIndex].node, currentIndex);
-						}
 					}
 				}
 			};

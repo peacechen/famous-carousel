@@ -10,6 +10,8 @@ var Transitionable = require("famous/transitions/Transitionable");
 var Size = require("famous/components/Size");
 var imageData = require("./data/data");
 
+var postAnimNodes = []; //array of objects
+
 var carousel = new famousCarousel({
         selector: ".slideshow",
         carouselData: imageData,
@@ -31,12 +33,16 @@ var carousel = new famousCarousel({
 //----------------------------------------------------------------------------
 // Code below does additional animation after each slide is done transitioning
 // to the center.
-var postAnimNodes = []; //array of objects
 
 // Post-sliding fade-in for first couple slides.
 function animDoneCallback(node, index) {
     if(index > 1)
         return;
+
+    fadeInTransition(postAnimNodes[index]);
+}
+
+function animStartCallback(node, index) {
 
     var addedNode;
     if(!postAnimNodes[index]) {
@@ -55,13 +61,9 @@ function animDoneCallback(node, index) {
         }
     }
 
-    fadeInTransition(postAnimNodes[index]);
-}
-
-function animStartCallback(node, index) {
     // Hide all other background nodes
     for (var i=0; i<postAnimNodes.length; i++) {
-        if (i !== index && postAnimNodes[i]) {
+        if (i !== index && postAnimNodes[i] && postAnimNodes[i].transitionable) {
             postAnimNodes[i].transitionable.halt();
             postAnimNodes[i].node.setOpacity(0);
         }

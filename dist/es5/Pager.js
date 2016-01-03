@@ -68,6 +68,11 @@ var Pager = exports.Pager = (function () {
 		_FamousEngine2.default.requestUpdate(this);
 
 		this.createPages(this.options);
+
+		// Fire animStartCallback for first slide.
+		if (typeof this.options.animStartCallback === "function") {
+			this.options.animStartCallback(this.pages[this.currentIndex].node, this.currentIndex);
+		}
 	}
 
 	_createClass(Pager, [{
@@ -165,6 +170,10 @@ var Pager = exports.Pager = (function () {
 			}
 
 			this.currentIndex = newIndex;
+
+			if (typeof this.options.animStartCallback === "function") {
+				this.options.animStartCallback(this.pages[this.currentIndex].node, this.currentIndex);
+			}
 		}
 	}, {
 		key: "removePages",
