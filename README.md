@@ -211,6 +211,9 @@ Run tests (linter & style checks for now):
 **Q:** The slides are shifted down and to the right.<BR>
 **A:** The selector element must not have any padding. The work-around for this [Famous engine bug](https://github.com/Famous/engine/issues/411) is to wrap the selector element in a container element which has the padding. Remove all padding from the selector element. See _example/index.html_ for... an example.
 
+**Q:** Safari allows the user to vertically drag the page. How do I stop that?<BR>
+**A:** Touch events on the body must be disabled. A ready to use solution is [iNoBounce](https://github.com/lazd/iNoBounce).
+
 ### To Do
 Pull requests are welcome. When submitting a PR, please make sure _npm run test_ passes.
 * Unit tests.
