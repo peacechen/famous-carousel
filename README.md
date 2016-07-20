@@ -3,19 +3,8 @@
 A responsive carousel / slideshow / slider powered by Famo.us.  Supports mouse, touch/swipe and keyboard navigation.<BR>
 
 ***
-__UPDATE: 0.9.x introduces ES6 and a new require() path:__
-
-CommonJS:
-
-        var famousCarousel = require("famous-carousel").Carousel;
-        var carousel = new famousCarousel( {...} );
-
-Global:
-
-        var carousel = famousCarousel.default( {...} );
-
-__If you see any unusual behavior after upgrading, delete node\_modules and run _npm install_ again__
-<BR>
+__BREAKING CHANGES: 1.0.0 introduces customizable transitions with an updated data format.
+Refer to the documentation and the example project.__
 ***
 
 ![famous-carousel preview](https://cloud.githubusercontent.com/assets/6295083/8266024/78a6db1c-16dc-11e5-9c18-93a25824a72c.gif)
@@ -32,15 +21,27 @@ Start the example project at port 8080:
 
 famous-carousel uses Browserify require. Refer to the _example_ folder for boilerplate setup. When using this as an npm module, reference it as such:
 
+    //-------------------------------------------------
+    // CommonJS:
     var Carousel = require("famous-carousel").Carousel;
+
+    // or...
+    //-------------------------------------------------
+    // ES6:
+    import { Carousel } from "famous-carousel";
+
+    // or...
+    //-------------------------------------------------
+    // Global (boo)
+    var Carousel = famousCarousel.default( {...} );
+
+    // Then create a new instance of the Carousel:
     var myCarousel = new Carousel("myDivSelector", {
                             // add options here
                             // ...
                         }
                     );
 
-  #### _ES6_ is now supported
-    import { Carousel } from "famous-carousel";
 
 ### Carousel Options
 The following keys are supported in the options object. Only _carouselData_ is required, all others are optional.
@@ -52,25 +53,46 @@ As a string, _selector_ is a CSS selector of the element to render into.<BR>
 As an object, _selector_ is assumed to be a Famous node. The node's container should have overflow set to hidden.
 
 * #### carouselData (required)
-Type: `Array`<BR>
-This specifies the content of the slides. It is an array of objects, each containing _type_, _data_, and optionally _backgroundSize_ keys.<BR>
+Type: `Object`<BR>
+This specifies the content of the slides and optional custom transitions.<BR>
+The _transitions_ key specifies the global entry and exit transitions. Each slide may have its own transitions which overrides the global ones.
+```JSON
+"transitions": {
+    "initialAlign": [x, y, z],  // 0 < x, y, z < 1
+    "initialPosition": [x, y, z],
+    "initialRotation": [x, y, z],  // 0 < x, y, z < 1
+    "entryTransition": {
+        "transform": string, // "align", "rotate", "position"
+        "transformParams": [x, y, z],
+        "curve": string, // famous fixed curves
+        "duration" : number, // ms
+    },
+    "exitTransition": {
+        // Same keys as entryTransition
+    }
+}
+```
+The _slides_ key is an array of objects, each containing _type_, _data_, and optionally _backgroundSize_ & _transition_ keys.<BR>
 _type_: may be `image`, `markup`, or `node`.<BR>
 _data_: must be a url for image, any valid html for markup, or a Famo.us node object.<BR>
 _backgroundSize_: [optional] CSS background-size attribute (default `contain`)<BR>
+_transition_: [optional] custom transition for the given slide only (see above for format).<BR>
 Example data:<BR>
 ```JSON
-        [
-            {   "type": "image",
-                "data": "http://myDomain/myPicture.jpg",
-                "backgroundSize": "cover"
-            },
-            {   "type": "markup",
-                "data": "<div style='color:blue'>Hello World<BR><BR>It's me!</div>"
-            },
-            {   "type": "node",
-                "data": myFamousNode
-            }
-        ]
+"slide": {
+    [
+        {   "type": "image",
+            "data": "http://myDomain/myPicture.jpg",
+            "backgroundSize": "cover"
+        },
+        {   "type": "markup",
+            "data": "<div style='color:blue'>Hello World<BR><BR>It's me!</div>"
+        },
+        {   "type": "node",
+            "data": myFamousNode
+        }
+    ]
+}
 ```
 
 * #### animStartCallback
@@ -165,7 +187,7 @@ Removes the slides.
 Removes the carousel instance entirely. NOTE: Famo.us 0.5.2 has [a bug causing it not to remove the DOMElement](https://github.com/Famous/engine/issues/245). famous-carousel removes the div.famous-dom-renderer element for now.<BR>
 
 ### Building
-To build a self-contained bundles:
+To build self-contained bundles:
 
     $ npm run build
 
@@ -182,7 +204,7 @@ To build optional es5 code:
      $ npm install -g babel
      $ npm run build-es5
 
-Run tests (linter & style checks for now):
+Run tests (~~linter &~~ style checks for now):
 
     npm run test
 
@@ -214,11 +236,16 @@ Run tests (linter & style checks for now):
 **Q:** Safari allows the user to vertically drag the page. How do I stop that?<BR>
 **A:** Touch events on the body must be disabled. A ready to use solution is [iNoBounce](https://github.com/lazd/iNoBounce).
 
+**Q:** I upgraded the famous-carousel version and everything broke.<BR>
+**A1:** Delete node\_modules and run _npm install_ again.<BR>
+**A2:** Check that the data format matches what is required by the given version of famous-carousel.
+
 ### To Do
 Pull requests are welcome. When submitting a PR, please make sure _npm run test_ passes.
 * Unit tests.
-* Add exit transition.
-* Add more user-configurable options such as slide transitions, nav arrow images...
+* ~~Add exit transition.~~
+* Add more user-configurable options such as ~~slide transitions~~, nav arrow images...
+* Re-implement physics option for customizable transitions.
 * Option to auto-hide navigation arrows & dots.
 * Navigate by clicking on dots.
 * Auto start/stop videos in slides.

@@ -1,6 +1,6 @@
 {
   "name": "famous-carousel",
-  "version": "0.9.14",
+  "version": "1.0.0",
   "author": "Peace Chen",
   "contributors": ["Tony Alves (https://github.com/talves)"],
   "license": "MIT",
@@ -19,13 +19,18 @@
     "build-globmin": "browserify src/index.js --standalone famousCarousel -g uglifyify | uglifyjs --screw-ie8 -m -c dead_code,sequences,conditionals,booleans,unused,if_return,join_vars,drop_debugger > dist/global/famous-carousel.min.js",
     "build-globdebug": "browserify src/index.js -d --standalone famousCarousel > dist/global/famous-carousel.debug.js",
     "build-commonjs": "browserify src/index.js -t [ babelify --modules common ] > dist/commonjs/famous-carousel.js",
-    "build-es5": "npm run build-es5-index && npm run build-es5-carousel && npm run build-es5-dots && npm run build-es5-arrow && npm run build-es5-pager",
+    "build-es5": "npm run build-es5-index && npm run build-es5-carousel && npm run build-es5-dots && npm run build-es5-arrow && npm run build-es5-pagers",
     "build-es5-index": "babel src/index.js > dist/es5/index.js",
     "build-es5-carousel": "babel src/Carousel.js > dist/es5/Carousel.js",
+    "build-es5-pagers": "npm run build-es5-pager && npm run build-es5-pager-align && npm run build-es5-pager-rotate && npm run build-es5-pager-position && npm run build-es5-pager-physics",
     "build-es5-pager": "babel src/Pager.js > dist/es5/Pager.js",
+    "build-es5-pager-align": "babel src/PagerAlign.js > dist/es5/PagerAlign.js",
+    "build-es5-pager-rotate": "babel src/PagerRotate.js > dist/es5/PagerRotate.js",
+    "build-es5-pager-position": "babel src/PagerPosition.js > dist/es5/PagerPosition.js",
+    "build-es5-pager-physics": "babel src/PagerPhysics.js > dist/es5/PagerPhysics.js",
     "build-es5-dots": "babel src/Dots.js > dist/es5/Dots.js",
     "build-es5-arrow": "babel src/Arrow.js > dist/es5/Arrow.js",
-    "test": "npm run lint-eslint && npm run lint-jscs",
+    "test": "npm run lint-jscs",
     "lint-jscs": "jscs src/",
     "lint-eslint": "eslint --ignore-path .gitignore src/",
     "example": "npm run build-example && npm run build-example-global && npm run serve",
@@ -50,6 +55,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.0.16",
-    "famous": "git://github.com/peacechen/engine#af98b6c"
+    "famous": "git://github.com/peacechen/engine#af98b6c",
+    "lodash": "^4.13.1"
   }
 }

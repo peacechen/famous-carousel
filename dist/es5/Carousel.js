@@ -56,7 +56,7 @@ var Carousel = exports.Carousel = function Carousel(carouselOptions) {
 		carousel.clearSlides();
 		carousel.options.carouselData = carouselData;
 		carousel.pager.createPages(carousel.options);
-		carousel.dots.createDots(carouselData.length);
+		carousel.dots.createDots(carouselData.slides.length);
 
 		_positionComponents();
 	};
@@ -100,9 +100,9 @@ var Carousel = exports.Carousel = function Carousel(carouselOptions) {
 
 	var autoPlayTimer = null;
 
-	if (carousel.options.initialIndex > carousel.options.carouselData.length - 1) {
+	if (carousel.options.initialIndex > carousel.options.carouselData.slides.length - 1) {
 		// Cap starting index to final page.
-		carousel.options.initialIndex = carousel.options.carouselData.length - 1;
+		carousel.options.initialIndex = carousel.options.carouselData.slides.length - 1;
 	}
 
 	// Instantiate pager (slides), dots, arrows.
@@ -115,7 +115,7 @@ var Carousel = exports.Carousel = function Carousel(carouselOptions) {
 
 	carousel.dots = new _Dots.Dots({
 		parent: carousel.root,
-		numPages: carousel.options.carouselData.length,
+		numPages: carousel.options.carouselData.slides.length,
 		initialIndex: carousel.options.initialIndex,
 		width: carousel.options.dotWidth,
 		spacing: carousel.options.dotSpacing,
@@ -176,7 +176,7 @@ var Carousel = exports.Carousel = function Carousel(carouselOptions) {
 
 	function _updateArrows(newIndex) {
 		var min = 0;
-		var max = carousel.options.carouselData.length - 1;
+		var max = carousel.options.carouselData.slides.length - 1;
 		var floor = min;
 		var ceiling = max;
 		if (carousel.options.wrapAround) {
@@ -218,7 +218,7 @@ var Carousel = exports.Carousel = function Carousel(carouselOptions) {
 				if (currentIndex !== newIndex) {
 					currentIndex = newIndex;
 					carousel.dots.pageChange(oldIndex, currentIndex);
-					carousel.pager.pageChange(oldIndex, currentIndex);
+					carousel.pager.pageChange(oldIndex, currentIndex, direction, payload.resumeFromCurrentPosition);
 				}
 			}
 		};

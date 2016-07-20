@@ -1,7 +1,7 @@
 {
 	"preset": "google",
 	"maximumLineLength": {
-		"value": 100,
+		"value": 140,
 		"allowRegex": true,
 		"allowComments": true
 	},

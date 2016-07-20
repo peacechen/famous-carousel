@@ -13,10 +13,6 @@ var _DOMElement = require("famous/dom-renderables/DOMElement");
 
 var _DOMElement2 = _interopRequireDefault(_DOMElement);
 
-var _PhysicsEngine = require("famous/physics/PhysicsEngine");
-
-var _PhysicsEngine2 = _interopRequireDefault(_PhysicsEngine);
-
 var _FamousEngine = require("famous/core/FamousEngine");
 
 var _FamousEngine2 = _interopRequireDefault(_FamousEngine);
@@ -25,22 +21,29 @@ var _GestureHandler = require("famous/components/GestureHandler");
 
 var _GestureHandler2 = _interopRequireDefault(_GestureHandler);
 
-var _physics = require("famous/physics");
+var _PagerAlign = require("./PagerAlign");
 
-var _physics2 = _interopRequireDefault(_physics);
+var PagerAlign = _interopRequireWildcard(_PagerAlign);
 
-var _math = require("famous/math");
+var _PagerRotate = require("./PagerRotate");
 
-var _math2 = _interopRequireDefault(_math);
+var PagerRotate = _interopRequireWildcard(_PagerRotate);
+
+var _PagerPosition = require("./PagerPosition");
+
+var PagerPosition = _interopRequireWildcard(_PagerPosition);
+
+var _lodash = require("lodash.assign");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _instanceof(left, right) { if (right != null && right[Symbol.hasInstance]) { return right[Symbol.hasInstance](left); } else { return left instanceof right; } }
 
-var Box = _physics2.default.Box;
-var Spring = _physics2.default.Spring;
-var Vec3 = _math2.default.Vec3;
-var hideAngle = Math.PI / 2;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Pager = exports.Pager = (function () {
 	function Pager(options) {
@@ -54,18 +57,12 @@ var Pager = exports.Pager = (function () {
 		this.threshold = 0.45;
 		this.pageWidth = 0;
 
-		// Add a physics simulation and update this instance using regular time updates from the clock.
-		this.simulation = new _PhysicsEngine2.default();
-
 		var resizeComponent = {
 			onSizeChange: function onSizeChange(x) {
 				return _this.pageWidth = x;
 			}
 		};
 		this.node.addComponent(resizeComponent);
-
-		// .requestUpdate will call the .onUpdate method next frame, passing in the time stamp for that frame
-		_FamousEngine2.default.requestUpdate(this);
 
 		this.createPages(this.options);
 
@@ -75,6 +72,8 @@ var Pager = exports.Pager = (function () {
 		}
 	}
 
+	// Render animation frame by frame
+
 	_createClass(Pager, [{
 		key: "onUpdate",
 		value: function onUpdate(time) {
@@ -82,98 +81,438 @@ var Pager = exports.Pager = (function () {
 				return;
 			}
 
-			this.simulation.update(time);
-
 			var page;
-			var physicsTransform;
-			var p, r, xPos;
-			for (var i = 0, len = this.pages.length; i < len; i++) {
-				page = this.pages[i];
+			var transitionableXYZ;
+			var xform;
+			var requestUpdate = false;
 
-				// Get the transform from the `Box` body
-				physicsTransform = this.simulation.getTransform(page.box);
-				p = physicsTransform.position;
+			var _iteratorNormalCompletion = true;
+			var _didIteratorError = false;
+			var _iteratorError = undefined;
 
-				// Set the `slide`s x-position to the `Box` body's x-position
-				// Math.round is significantly faster than toFixed.
-				xPos = Math.round(p[0] * this.pageWidth * 100) / 100;
-				page.node.setPosition(xPos, 0, 0);
+			try {
+				for (var _iterator = this.pages[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+					var _page = _step.value;
 
-				// Set the currently selected page's rotation to match the `Box` body's rotation
-				if (i === this.currentIndex) {
-					r = physicsTransform.rotation;
-					page.node.setRotation(r[0], r[1], r[2], r[3]);
-
-					//Fire user callback when sliding is done.
-					if (Math.abs(xPos) === 0 && !page.animDoneCallbackFired) {
-						page.animDoneCallbackFired = true;
-						if (typeof this.options.animDoneCallback === "function") {
-							this.options.animDoneCallback(page.node, i);
+					if (_instanceof(_page.transitionable, Array) === false) {
+						continue;
+					}
+					transitionableXYZ = [];
+					for (var i = 0; i < _page.transitionable.length; i++) {
+						if (_page.transitionable[i] && _page.transitionable[i].isActive()) {
+							transitionableXYZ[i] = _page.transitionable[i].get();
+						} else {
+							delete _page.currentTransform;
 						}
 					}
-				} else {
-					page.animDoneCallbackFired = false;
+					if (transitionableXYZ.length > 0) {
+						xform = this.selectPagerTransform(_page.currentTransform);
+						xform.set(_page, transitionableXYZ);
+						requestUpdate = true;
+					}
+
+					if (_page === this.pages[this.currentIndex] && transitionableXYZ.length === 0) {
+						this.options.animDoneCallback(_page.node, this.currentIndex);
+					}
 				}
+			} catch (err) {
+				_didIteratorError = true;
+				_iteratorError = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion && _iterator.return) {
+						_iterator.return();
+					}
+				} finally {
+					if (_didIteratorError) {
+						throw _iteratorError;
+					}
+				}
+			}
+
+			if (requestUpdate) {
+				_FamousEngine2.default.requestUpdateOnNextTick(this);
+			}
+		}
+
+		// Calculate the position between matrices given percentage.
+
+	}, {
+		key: "positionBetweenMatrices",
+		value: function positionBetweenMatrices(startMatrix, endMatrix, percentage) {
+			var result = [];
+			var range;
+
+			for (var i = 0; i < startMatrix.length; i++) {
+				range = endMatrix[i] - startMatrix[i];
+				result[i] = range * percentage + startMatrix[i];
+			}
+			return result;
+		}
+
+		// Worker function that performs the slide positioning for dragging.
+		// Similar to doTransition but enough differences to warrant a separate function.
+
+	}, {
+		key: "doDragPositioning",
+		value: function doDragPositioning(slide, isForward, sequence, dragPercentage) {
+			var transition;
+			var startParams, endParams;
+			var params;
+			var xform;
+
+			switch (sequence) {
+				case "previous":
+					transition = this.transitionForAction(slide, "exitTransition");
+					break;
+				case "center":
+					transition = this.transitionForAction(slide, "entryTransition");
+					break;
+				case "next":
+				default:
+					return;
+			}
+			startParams = this.initialParamsForTransformType(slide, transition.transform);
+			endParams = transition.transformParams;
+
+			dragPercentage = 1 - dragPercentage;
+			if (isForward) {
+				// Swap start & end
+				params = this.positionBetweenMatrices(endParams, startParams, dragPercentage);
+			} else {
+				params = this.positionBetweenMatrices(startParams, endParams, dragPercentage);
+			}
+			xform = this.selectPagerTransform(transition.transform);
+			slide.currentTransform = transition.transform;
+
+			xform.set(slide, params);
+		}
+	}, {
+		key: "restoreSlidePosition",
+		value: function restoreSlidePosition(slide) {
+			if (slide.currentTransform) {
+				var xform = this.selectPagerTransform(slide.currentTransform);
+				var startParams = xform.get(slide);
+				var endParams = this.initialParamsForTransformType(slide, slide.currentTransform);
+				xform.animate(slide, startParams, endParams);
+			}
+		}
+
+		// Worker function that performs the slide animation for arrow navigation.
+
+	}, {
+		key: "doTransition",
+		value: function doTransition(slide, isForward, sequence, resumeFromCurrentPosition) {
+			if (!resumeFromCurrentPosition) {
+				this.initSlideLocation(slide, false); //Set to initial location (could be hidden)
+			}
+
+			var transition;
+			var startParams, endParams;
+			var xform;
+
+			switch (sequence) {
+				case "previous":
+					if (!resumeFromCurrentPosition) {
+						this.initSlideLocation(slide, true); //Set to entry final location (this is where to start from).
+					}
+					transition = this.transitionForAction(slide, "exitTransition");
+					if (isForward) {
+						//ToDo? merge initial with slide params
+						startParams = this.initialParamsForTransformType(slide, transition.transform);
+						endParams = transition.transformParams;
+					} else {
+						// Prep slide by moving to "previous" location (no animation)
+						xform = this.selectPagerTransform(transition.transform);
+						xform.set(slide, transition.transformParams);
+						return;
+					}
+					break;
+				case "center":
+					if (isForward) {
+						transition = this.transitionForAction(slide, "entryTransition");
+						startParams = this.initialParamsForTransformType(slide, transition.transform);
+						endParams = transition.transformParams;
+					} else {
+						if (!resumeFromCurrentPosition) {
+							this.initSlideLocation(slide, true); //Set to entry final location (where it will end up).
+						}
+						// Reverse exitTransition
+						transition = this.transitionForAction(slide, "exitTransition");
+						startParams = transition.transformParams;
+						//ToDo? merge initial with slide params
+						endParams = this.initialParamsForTransformType(slide, transition.transform);
+					}
+					break;
+				case "next":
+					if (isForward) {
+						this.initSlideLocation(slide, false); //For resumeFromCurrentPosition
+						return; // No-op for full transition
+					}
+					if (!resumeFromCurrentPosition) {
+						this.initSlideLocation(slide, true); //Set to entry final location (this is where to start from).
+					}
+					// Reverse entryTransition
+					transition = this.transitionForAction(slide, "entryTransition");
+					startParams = transition.transformParams;
+					//ToDo? merge initial with slide params
+					endParams = this.initialParamsForTransformType(slide, transition.transform);
+					break;
+			}
+
+			slide.currentTransform = transition.transform;
+			slide.currentTransformOpts = {
+				curve: transition.curve,
+				duration: transition.duration
+			};
+
+			xform = this.selectPagerTransform(transition.transform);
+
+			if (resumeFromCurrentPosition) {
+				startParams = xform.get(slide);
+			}
+			xform.animate(slide, startParams, endParams);
+		}
+
+		// Page change handler
+
+	}, {
+		key: "pageChange",
+		value: function pageChange(oldIndex, newIndex, direction, resumeFromCurrentPosition) {
+			var isForward = direction === 1;
+			var visibleSlides = this.adjacentSlides(newIndex);
+
+			for (var i = 0; i < this.pages.length; i++) {
+				for (var key in visibleSlides) {
+					if (visibleSlides[key] === i) {
+						// key is previous, center, next
+						this.doTransition(this.pages[i], isForward, key, resumeFromCurrentPosition);
+					}
+				}
+			}
+
+			this.currentIndex = newIndex;
+
+			// Callback hook for animation start
+			if (typeof this.options.animStartCallback === "function") {
+				this.options.animStartCallback(this.pages[this.currentIndex].node, this.currentIndex);
 			}
 
 			_FamousEngine2.default.requestUpdateOnNextTick(this);
 		}
 	}, {
-		key: "pageChange",
-		value: function pageChange(oldIndex, newIndex) {
-			var xOffset;
-			var reshuffle = false;
-			var i;
-			// Wrap-around cases shuffle pages to other side.
-			if (oldIndex === this.pages.length - 1 && newIndex === 0) {
-				xOffset = 1;
-				reshuffle = true;
-			} else if (oldIndex === 0 && newIndex === this.pages.length - 1) {
-				xOffset = -1;
-				reshuffle = true;
-			}
+		key: "createPages",
+		value: function createPages(options) {
+			var pages = [];
 
-			if (reshuffle) {
-				for (i = 0; i < this.pages.length; i++) {
-					this.pages[i].anchor.set(xOffset, 0, 0);
-					this.pages[i].node.setRotation(0, hideAngle, 0);
-				}
-			} else {
-				// Non-wrapping cases
-				xOffset = oldIndex < newIndex ? -1 : 1;
-				this.pages[oldIndex].anchor.set(xOffset, 0, 0);
-				this.pages[oldIndex].node.setRotation(0, hideAngle, 0);
-			}
+			for (var i = 0; i < options.carouselData.slides.length; i++) {
+				var node, el;
+				var backgroundSize = options.carouselData.slides[i].backgroundSize;
 
-			var visibleSlides = this.adjacentSlides(newIndex);
-			var yRotation;
-			for (i = 0; i < this.pages.length; i++) {
-				yRotation = hideAngle;
-				for (var key in visibleSlides) {
-					if (visibleSlides[key] === i) {
-						yRotation = 0;
-						switch (key) {
-							case "left":
-								xOffset = -1;
-								break;
-							case "center":
-								xOffset = 0;
-								break;
-							case "right":
-								xOffset = 1;
-								break;
-						}
-						this.pages[i].anchor.set(xOffset, 0, 0);
+				if (options.carouselData.slides[i].type === "node") {
+					node = options.carouselData.slides[i].data;
+				} else {
+					node = this.node.addChild();
+					el = new _DOMElement2.default(node);
+					if (typeof backgroundSize !== "string") {
+						backgroundSize = "contain";
 					}
+					switch (options.carouselData.slides[i].type) {
+						case "image":
+							el.setProperty("backgroundImage", "url(" + options.carouselData.slides[i].data + ")");
+							el.setProperty("backgroundRepeat", "no-repeat");
+							el.setProperty("backgroundSize", backgroundSize);
+							el.setProperty("backgroundPosition", "center");
+							break;
+						case "markup":
+							el.setContent(options.carouselData.slides[i].data);
+							break;
+					}
+					el.setProperty("backfaceVisibility", "hidden");
+					el.setProperty("webkitBackfaceVisibility", "hidden");
 				}
-				this.pages[i].node.setRotation(0, yRotation, 0);
+
+				var gestureHandler = new _GestureHandler2.default(node);
+				var isForward;
+				var startPositionX;
+				var previousVelocityX;
+				var dragXPercentage = 0;
+				/*eslint-disable */
+				gestureHandler.on("drag", (function (index, e) {
+					switch (e.status) {
+						case "start":
+							this.draggedIndex = index;
+							return;
+						case "move":
+							if (this.draggedIndex === index) {
+								if (typeof isForward === "undefined") {
+									isForward = e.centerDelta.x / this.pages[index].node.getSize()[0];
+									if (isForward === 0) {
+										isForward = undefined;
+										return; // indeterminate direction
+									}
+									isForward = isForward < 0;
+								}
+								if (typeof startPositionX === "undefined") {
+									startPositionX = e.center.x;
+								}
+								var visibleSlides = this.adjacentSlides(index + (isForward ? 1 : 0));
+								for (var key in visibleSlides) {
+									var idx = visibleSlides[key];
+									dragXPercentage = Math.abs(startPositionX - e.pointers[0].position.x) / this.pages[idx].node.getSize()[0];
+									this.doDragPositioning(this.pages[idx], isForward, key, dragXPercentage);
+								}
+							}
+							return;
+						case "end":
+							if (dragXPercentage > this.threshold || Math.abs(e.centerVelocity.x) > 500) {
+								this.options.context.emit("pageChange", {
+									direction: isForward ? 1 : -1,
+									numSlidesToAdvance: this.options.manualSlidesToAdvance,
+									stopAutoPlay: true,
+									resumeFromCurrentPosition: true
+								});
+							} else if (dragXPercentage !== 0) {
+								// restore slide to original position
+								var visibleSlides = this.adjacentSlides(index);
+								for (var key in visibleSlides) {
+									var idx = visibleSlides[key];
+									this.restoreSlidePosition(this.pages[idx]);
+								}
+								_FamousEngine2.default.requestUpdateOnNextTick(this);
+							}
+							isForward = undefined;
+							dragXPercentage = 0;
+							startPositionX = undefined;
+							return;
+						default:
+							return;
+					}
+				}).bind(this, i));
+				/*eslint-enable */
+
+				var page = {
+					node: node,
+					transitions: options.carouselData.slides[i].transitions,
+					el: el,
+					animDoneCallbackFired: false
+				};
+
+				pages.push(page);
+				this.initSlideLocation(page, i === this.currentIndex);
 			}
 
-			this.currentIndex = newIndex;
+			this.pages = pages;
+		}
+	}, {
+		key: "initSlideLocation",
+		value: function initSlideLocation(slide, isCurrentIndex) {
+			// Use initial settings from slide, falling back to global settings.
+			var globalSlideTransitions = this.options.carouselData.transitions;
+			var transitions = {};
+			(0, _lodash2.default)(transitions, globalSlideTransitions, slide.transitions);
 
-			if (typeof this.options.animStartCallback === "function") {
-				this.options.animStartCallback(this.pages[this.currentIndex].node, this.currentIndex);
+			// Place the initial slide at its destination location.
+			if (isCurrentIndex) {
+				var xform = this.selectPagerTransform(transitions.entryTransition.transform);
+				xform.set(slide, transitions.entryTransition.transformParams);
+				return;
 			}
+
+			if (_instanceof(transitions.initialAlign, Array)) {
+				slide.node.setAlign(transitions.initialAlign[0], transitions.initialAlign[1], transitions.initialAlign[2]);
+			}
+			if (_instanceof(transitions.initialPosition, Array)) {
+				slide.node.setPosition(transitions.initialPosition[0], transitions.initialPosition[1], transitions.initialPosition[2]);
+			}
+			if (_instanceof(transitions.initialMountPoint, Array)) {
+				slide.node.setMountPoint(transitions.initialMountPoint[0], transitions.initialMountPoint[1], transitions.initialMountPoint[2]);
+			}
+			if (_instanceof(transitions.initialOrigin, Array)) {
+				slide.node.setOrigin(transitions.initialOrigin[0], transitions.initialOrigin[1], transitions.initialOrigin[2]);
+			}
+			if (_instanceof(transitions.initialRotation, Array)) {
+				slide.node.setRotation(transitions.initialRotation[0], transitions.initialRotation[1], transitions.initialRotation[2]);
+			}
+		}
+
+		// Factory that returns the transform functions for the given type.
+
+	}, {
+		key: "selectPagerTransform",
+		value: function selectPagerTransform(type) {
+			switch (type) {
+				case "align":
+					return PagerAlign;
+				case "position":
+					return PagerPosition;
+				case "rotate":
+					return PagerRotate;
+				case "mountPoint":
+					return PagerMountPoint; //TBD
+				case "origin":
+					return PagerOrigin; //TBD
+				case "physics":
+					return PagerPhysics; //TBD
+			}
+		}
+
+		// Return initial params based on the transform type
+
+	}, {
+		key: "initialParamsForTransformType",
+		value: function initialParamsForTransformType(slide, type) {
+			// Use initial settings from slide, falling back to global settings.
+			var globalSlideTransitions = this.options.carouselData.transitions;
+			var transitions = {};
+			(0, _lodash2.default)(transitions, globalSlideTransitions, slide.transitions);
+
+			switch (type) {
+				case "align":
+					return transitions.initialAlign;
+				case "position":
+					return transitions.initialPosition;
+				case "mountPoint":
+					return transitions.initialMountPoint;
+				case "origin":
+					return transitions.initialOrigin;
+				case "rotate":
+					return transitions.initialRotation;
+			}
+		}
+
+		// Return transition for action (e.g. entry or exit).
+		// Search global as well as local slide overrides.
+
+	}, {
+		key: "transitionForAction",
+		value: function transitionForAction(slide, action) {
+			var globalTransition = this.options.carouselData.transitions ? this.options.carouselData.transitions[action] : {};
+			var slideTransition = slide.transitions ? slide.transitions[action] : {};
+			var transition = {};
+			(0, _lodash2.default)(transition, globalTransition, slideTransition);
+			return transition;
+		}
+
+		// Find slides adjacent to the current index. Returns an object with keys
+		// previous, current, next.
+		// If input slide is at either end, the previous or next values wrap around.
+
+	}, {
+		key: "adjacentSlides",
+		value: function adjacentSlides(centerIndex) {
+			centerIndex = centerIndex < 0 ? this.pages.length - 1 : centerIndex;
+			centerIndex = centerIndex >= this.pages.length ? 0 : centerIndex;
+
+			var slides = {};
+			slides.previous = centerIndex - 1;
+			slides.next = centerIndex + 1;
+
+			slides.previous = slides.previous < 0 ? this.pages.length - 1 : slides.previous;
+			slides.next = slides.next >= this.pages.length ? 0 : slides.next;
+			slides.center = centerIndex;
+
+			return slides;
 		}
 	}, {
 		key: "removePages",
@@ -188,159 +527,6 @@ var Pager = exports.Pager = (function () {
 				delete this.pages[i].node;
 			}
 			delete this.pages;
-		}
-	}, {
-		key: "createPages",
-		value: function createPages(options) {
-			var pages = [];
-
-			for (var i = 0; i < options.carouselData.length; i++) {
-				var slide, el;
-				var backgroundSize = options.carouselData[i].backgroundSize;
-
-				if (options.carouselData[i].type === "node") {
-					slide = options.carouselData[i].data;
-				} else {
-					slide = this.node.addChild();
-					el = new _DOMElement2.default(slide);
-					if (typeof backgroundSize !== "string") {
-						backgroundSize = "contain";
-					}
-					switch (options.carouselData[i].type) {
-						case "image":
-							el.setProperty("backgroundImage", "url(" + options.carouselData[i].data + ")");
-							el.setProperty("backgroundRepeat", "no-repeat");
-							el.setProperty("backgroundSize", backgroundSize);
-							el.setProperty("backgroundPosition", "center");
-							break;
-						case "markup":
-							el.setContent(options.carouselData[i].data);
-							break;
-					}
-				}
-
-				slide.setAlign(0.5, 0.5);
-				slide.setMountPoint(0.5, 0.5);
-				slide.setOrigin(0.5, 0.5);
-
-				var gestureHandler = new _GestureHandler2.default(slide);
-				var anchorXoffset;
-				/*eslint-disable */
-				gestureHandler.on("drag", (function (index, e) {
-					switch (e.status) {
-						case "start":
-							this.draggedIndex = index;
-							anchorXoffset = 0;
-							return;
-						case "move":
-							if (this.draggedIndex === index) {
-								var visibleSlides = this.adjacentSlides(index);
-								for (var key in visibleSlides) {
-									var idx = visibleSlides[key];
-									if (isNaN(idx)) {
-										continue;
-									}
-									anchorXoffset = e.centerDelta.x / this.pages[idx].node.getSize()[0];
-									anchorXoffset += this.pages[idx].anchor.x;
-									this.pages[idx].anchor.set(anchorXoffset, 0, 0);
-								}
-							}
-							return;
-						case "end":
-							if (this.draggedIndex === index) {
-								var direction = 0;
-								if (anchorXoffset >= this.threshold) {
-									direction = -1; // left
-								} else if (anchorXoffset <= -this.threshold) {
-										direction = 1; // right
-									}
-
-								if (direction === 0) {
-									// Snap anchor back to center on release
-									var visibleSlides = this.adjacentSlides(index);
-
-									if (this.pages[index].anchor.x !== 0) {
-										this.pages[index].anchor.set(0, 0, 0);
-										if (!isNaN(visibleSlides.left)) {
-											this.pages[visibleSlides.left].anchor.set(-1, 0, 0);
-										}
-										if (!isNaN(visibleSlides.right)) {
-											this.pages[visibleSlides.right].anchor.set(1, 0, 0);
-										}
-									}
-								} else {
-									// Fire page change event if slide has moved beyond threshold
-									this.options.context.emit("pageChange", {
-										direction: direction,
-										numSlidesToAdvance: this.options.manualSlidesToAdvance,
-										stopAutoPlay: true
-									});
-								}
-							}
-							this.draggedIndex = -1;
-							return;
-						default:
-							return;
-					}
-				}).bind(this, i));
-				/*eslint-enable */
-
-				// A `Box` body to relay simulation data back to the visual element
-				var box = new Box({
-					mass: 100,
-					size: [100, 100, 100]
-				});
-
-				// Place all anchors off the screen & rotated, except for the
-				// anchor belonging to the first/initial image node
-				var anchor = new Vec3(1, 0, 0); //off-screen
-				var yAngle = hideAngle;
-				if (i === this.currentIndex) {
-					anchor = new Vec3(0, 0, 0); //on-screen
-					yAngle = 0;
-				}
-				slide.setRotation(0, yAngle, 0);
-
-				// Attach the box to the anchor with a `Spring` force
-				//ToDo: Add support for user-configurable transition
-				var spring = new Spring(null, box, {
-					period: 0.4,
-					dampingRatio: 0.7,
-					anchor: anchor
-				});
-
-				// Notify the physics engine to track the box and the springs
-				this.simulation.add(box, spring);
-
-				pages.push({
-					node: slide,
-					el: el,
-					box: box,
-					spring: spring,
-					anchor: anchor,
-					animDoneCallbackFired: false
-				});
-			}
-
-			this.pages = pages;
-		}
-
-		// Find slides adjacent to the current index. Returns an object with keys
-		// left, center, right.
-		// If input slide is at either end, the left or right values are undefined.
-
-	}, {
-		key: "adjacentSlides",
-		value: function adjacentSlides(centerIndex) {
-			var slides = {};
-			slides.left = centerIndex - 1;
-			slides.right = centerIndex + 1;
-
-			slides.left = slides.left < 0 ? undefined : slides.left;
-			slides.right = slides.right >= this.pages.length ? undefined : slides.right;
-			slides.center = centerIndex;
-
-			return slides;
 		}
 	}]);
 
