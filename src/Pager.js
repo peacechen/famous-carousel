@@ -25,9 +25,13 @@ export class Pager {
 
 		this.createPages(this.options);
 
-		// Fire animStartCallback for first slide.
+		// Fire animStartCallback & animDoneCallback for first slide.
+		// Assumption is that first slide is shown immediately without animation.
 		if (typeof this.options.animStartCallback === "function") {
 			this.options.animStartCallback(this.pages[this.currentIndex].node, this.currentIndex);
+		}
+		if (typeof this.options.animDoneCallback === "function") {
+			this.options.animDoneCallback(this.pages[this.currentIndex].node, this.currentIndex);
 		}
 	}
 
@@ -250,6 +254,16 @@ export class Pager {
 				}
 				el.setProperty("backfaceVisibility", "hidden");
 				el.setProperty("webkitBackfaceVisibility", "hidden");
+
+				//Add class(es)
+				var slideClass = options.carouselData.slides[i].class;
+				if (Array.isArray(slideClass)) {
+					for (let objClass of slideClass) {
+						el.addClass(objClass);
+					}
+				} else if (typeof slideClass === "string") {
+					el.addClass(slideClass);
+				}
 			}
 
 			var gestureHandler = new GestureHandler(node);

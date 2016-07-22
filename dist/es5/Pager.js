@@ -66,9 +66,13 @@ var Pager = exports.Pager = (function () {
 
 		this.createPages(this.options);
 
-		// Fire animStartCallback for first slide.
+		// Fire animStartCallback & animDoneCallback for first slide.
+		// Assumption is that first slide is shown immediately without animation.
 		if (typeof this.options.animStartCallback === "function") {
 			this.options.animStartCallback(this.pages[this.currentIndex].node, this.currentIndex);
+		}
+		if (typeof this.options.animDoneCallback === "function") {
+			this.options.animDoneCallback(this.pages[this.currentIndex].node, this.currentIndex);
 		}
 	}
 
@@ -330,6 +334,37 @@ var Pager = exports.Pager = (function () {
 					}
 					el.setProperty("backfaceVisibility", "hidden");
 					el.setProperty("webkitBackfaceVisibility", "hidden");
+
+					//Add class(es)
+					var slideClass = options.carouselData.slides[i].class;
+					if (Array.isArray(slideClass)) {
+						var _iteratorNormalCompletion2 = true;
+						var _didIteratorError2 = false;
+						var _iteratorError2 = undefined;
+
+						try {
+							for (var _iterator2 = slideClass[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+								var objClass = _step2.value;
+
+								el.addClass(objClass);
+							}
+						} catch (err) {
+							_didIteratorError2 = true;
+							_iteratorError2 = err;
+						} finally {
+							try {
+								if (!_iteratorNormalCompletion2 && _iterator2.return) {
+									_iterator2.return();
+								}
+							} finally {
+								if (_didIteratorError2) {
+									throw _iteratorError2;
+								}
+							}
+						}
+					} else if (typeof slideClass === "string") {
+						el.addClass(slideClass);
+					}
 				}
 
 				var gestureHandler = new _GestureHandler2.default(node);

@@ -19,7 +19,7 @@ Start the example project at port 8080:
 
 ### Usage
 
-famous-carousel uses Browserify require. Refer to the _example_ folder for boilerplate setup. When using this as an npm module, reference it as such:
+famous-carousel uses Browserify require. Refer to the _example_ folder for boilerplate setup. Also supported are ES6 imports as well as a global version:
 
     //-------------------------------------------------
     // CommonJS:
@@ -75,6 +75,7 @@ The _transitions_ key specifies the global entry and exit transitions. Each slid
 The _slides_ key is an array of objects, each containing _type_, _data_, and optionally _backgroundSize_ & _transition_ keys.<BR>
 _type_: may be `image`, `markup`, or `node`.<BR>
 _data_: must be a url for image, any valid html for markup, or a Famo.us node object.<BR>
+_class_: [optional] (array or string) CSS class to apply to the slide.<BR>
 _backgroundSize_: [optional] CSS background-size attribute (default `contain`)<BR>
 _transition_: [optional] custom transition for the given slide only (see above for format).<BR>
 Example data:<BR>
